@@ -97,7 +97,7 @@ insert into grade(gname,gprice,mno)values('45TDI',88000000,10);
 insert into grade(gname,gprice,mno)values('55TDI',99857000,10);
 insert into grade(gname,gprice,mno)values('쿠페',59900000,11);
 insert into grade(gname,gprice,mno)values('컨버터블',67000000,11);
-insert into grade(gname,gprice,mno)values('ST-Line',625000000,12);
+insert into grade(gname,gprice,mno)values('ST-Line',62500000,12);
 insert into grade(gname,gprice,mno)values('PLATINUM',69000000,12);
 
 # apply table
@@ -111,4 +111,13 @@ values ('신동엽', '010-3333-3333', 2, 50, 50, 30, 36);
 # 테이블 확인
 select * from car;
 select * from brand;
+select * from model;
+select * from grade;
 select * from apply;
+
+#테이블 지우기
+#drop table car;
+#drop table brand;
+#drop table model;
+#drop table grade;
+#drop table apply;
