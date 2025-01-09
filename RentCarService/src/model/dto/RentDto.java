@@ -1,5 +1,5 @@
 package model.dto;
 
-public class CmDto {
+public class RentDto {
 
 }

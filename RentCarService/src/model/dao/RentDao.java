@@ -1,5 +1,5 @@
 package model.dao;
 
-public class CmDao {
+public class RentDao {
 
 }

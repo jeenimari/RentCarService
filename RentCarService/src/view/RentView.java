@@ -1,6 +1,6 @@
 package view;
 
-public class CmView {
+public class RentView {
 ///ㅁㄴㅇㅁㄴㅇㅁㄴㅇ
 //ㅎㅎㅎ
 }
