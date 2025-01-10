@@ -12,7 +12,7 @@ public class Dao {
 	/** 연동할 DB서버의 계정명 */
 	private String dbuser = "root";
 	/** 연동할 DB서버의 비밀번호 */
-	private String dbpwd = "1234";
+	private String dbpwd = "hanu1229";
 	
 	protected Dao() {
 		try {			
