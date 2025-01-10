@@ -1,5 +1,5 @@
 package model.dto;
 
-public class LeaseDto {
+public class LeaseDto extends Dto {
 
 }

@@ -1,5 +1,5 @@
 package model.dto;
 
-public class AdminDto {
+public class AdminDto extends Dto {
 
 }
