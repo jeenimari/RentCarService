@@ -19,7 +19,7 @@ public class MainView {
 			int choose = scan.nextInt();
 			if(choose == 1) {}
 			else if(choose == 2) {}
-			else if(choose == 3) {}
+			else if(choose == 3) { AdminView.getInstance().pattern(); }
 			else if(choose == 4) {System.out.println(">> 종료"); break; }
 		}
 	}
