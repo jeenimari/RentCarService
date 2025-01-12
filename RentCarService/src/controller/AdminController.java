@@ -25,23 +25,9 @@ public class AdminController {
 		return result;
 	}
 	
-	/** 2. 차량등록 화면 제어 메소드 */
-	public boolean addCar(String table, String property, Dto data) {
-		boolean result = AdminDao.getInstance().addCar(table, property, data);
-		return result;
-	}
-	
-	public void add(Dto dto) {
-		AdminDao.getInstance().add(dto);
-	}
-	
-	public boolean add2(Dto dto) {
-		boolean result = AdminDao.getInstance().add2(dto);
-		return result;
-	}
-	
-	public ArrayList<Dto> select2(String tableName) {
-		ArrayList<Dto> result = AdminDao.getInstance().select2(tableName);
+	/** 2. 차량등록 화면 제어 메소드 */	
+	public boolean addCar(Dto dto) {
+		boolean result = AdminDao.getInstance().addCar(dto);
 		return result;
 	}
 	
@@ -49,8 +35,7 @@ public class AdminController {
 	public ArrayList<Dto> select(String tableName) {
 		ArrayList<Dto> result = AdminDao.getInstance().select(tableName);
 		return result;
-	}
-	
+	}	
 	
 	/** 3. 차량조회 화면 제어 메소드 */
 	public ArrayList<Dto> findCar() {
