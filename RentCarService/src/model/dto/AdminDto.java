@@ -38,4 +38,12 @@ public class AdminDto extends Dto {
 	public void setResidualValue(int residual_value) { this.residual_value = residual_value; }
 	public void setDuration(int duration) { this.duration = duration; }
 	
+	@Override
+	public String toString() {
+		return "AdminDto [ano=" + ano + ", aname=" + aname + ", aphone=" + aphone + ", atype=" + atype + ", deposit="
+				+ deposit + ", prepayments=" + prepayments + ", residual_value=" + residual_value + ", duration="
+				+ duration + "]";
+	}
+	
+	
 }

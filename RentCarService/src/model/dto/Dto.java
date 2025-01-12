@@ -36,5 +36,11 @@ public class Dto {
 	public void setBname(String bname) { this.bname = bname; }
 	public void setMname(String mname) { this.mname = mname; }
 	public void setGname(String gname) { this.gname = gname; }
+
+	@Override
+	public String toString() {
+		return "Dto [cno=" + cno + ", bno=" + bno + ", mno=" + mno + ", gno=" + gno + ", gprice=" + gprice + ", cname="
+				+ cname + ", bname=" + bname + ", mname=" + mname + ", gname=" + gname + "]";
+	}
 		
 }

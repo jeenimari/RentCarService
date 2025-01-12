@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import model.dao.AdminDao;
 import model.dto.AdminDto;
+import model.dto.Dto;
 
 public class AdminController {
 	// singleton start
@@ -25,13 +26,37 @@ public class AdminController {
 	}
 	
 	/** 2. 차량등록 화면 제어 메소드 */
-	public void addCar() {
-		
+	public boolean addCar(String table, String property, Dto data) {
+		boolean result = AdminDao.getInstance().addCar(table, property, data);
+		return result;
 	}
 	
+	public void add(Dto dto) {
+		AdminDao.getInstance().add(dto);
+	}
+	
+	public boolean add2(Dto dto) {
+		boolean result = AdminDao.getInstance().add2(dto);
+		return result;
+	}
+	
+	public ArrayList<Dto> select2(String tableName) {
+		ArrayList<Dto> result = AdminDao.getInstance().select2(tableName);
+		return result;
+	}
+	
+	/** 2-1. 테이블 출력 메소드 */
+	public ArrayList<Dto> select(String tableName) {
+		ArrayList<Dto> result = AdminDao.getInstance().select(tableName);
+		return result;
+	}
+	
+	
 	/** 3. 차량조회 화면 제어 메소드 */
-	public void findCar() {
-		
+	public ArrayList<Dto> findCar() {
+		ArrayList<Dto> result = AdminDao.getInstance().findCar();
+		return result;
+				
 	}
 	
 	/** 4. 차량수정 화면 제어 메소드 */
