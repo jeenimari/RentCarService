@@ -109,16 +109,26 @@ public class AdminView {
 	public void findCar() {
 		ArrayList<Dto> result = AdminController.getInstance().findCar();
 		System.out.println("======== 현재 등록된 차량 ========");
-		System.out.println("카테고리\t카테고리명\t  브랜드\t브랜드명\t모델\t모델명\t\t등급\t 등급명\t\t      가격");
-		System.out.println(" 번호\t\t   번호\t\t번호\t\t\t번호");
+		System.out.println("카테고리\t카테고리명\t  브랜드\t브랜드명\t\t모델\t모델명\t\t등급\t    등급명\t      가격");
+		System.out.println(" 번호\t\t   번호\t\t\t번호\t\t\t번호");
+		System.out.println("------------------------------------------------------------------------------"
+				+ "---------------------------");
 		for(int index = 0; index < result.size(); index++) {
 			Dto dto = result.get(index);
-			System.out.printf("  %d\t  %s\t    %d\t %s\t %d\t%-10s\t %d\t%-10s\t%12d\n",
-					dto.getCno(), dto.getCname(), dto.getBno(), dto.getBname(), dto.getMno(), dto.getMname(), 
-					dto.getGno(), dto.getGname(), dto.getGprice());
+			if(dto.getMname().length() > 4) {
+				System.out.printf("  %d      %s      %d     %-7s      %3d     %-10s    %d    %10s    %15d\n",
+						dto.getCno(), dto.getCname(), dto.getBno(), dto.getBname(), dto.getMno(), dto.getMname(), 
+						dto.getGno(), dto.getGname(), dto.getGprice());
+			} else {
+				System.out.printf("  %d      %s      %d     %-7s      %3d     %-10s      %d    %10s    %15d\n",
+						dto.getCno(), dto.getCname(), dto.getBno(), dto.getBname(), dto.getMno(), dto.getMname(), 
+						dto.getGno(), dto.getGname(), dto.getGprice());
+			}
 		}
-		System.out.println("\n카테고리\t카테고리명\t  브랜드\t브랜드명\t모델\t모델명\t\t등급\t 등급명\t\t      가격");
-		System.out.println(" 번호\t\t   번호\t\t번호\t\t\t번호");
+		System.out.println("------------------------------------------------------------------------------"
+				+ "---------------------------");
+		System.out.println("카테고리\t카테고리명\t  브랜드\t브랜드명\t\t모델\t모델명\t\t등급\t    등급명\t      가격");
+		System.out.println(" 번호\t\t   번호\t\t\t번호\t\t\t번호");
 		System.out.println("======== 현재 등록된 차량 ========");
 	}
 	
