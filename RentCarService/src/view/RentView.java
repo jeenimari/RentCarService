@@ -14,7 +14,7 @@ public class RentView {
 	public void run() {
 		while(true) {
 			System.out.println("\n====렌트카===== ");
-			//1.차종타입 선택
+			//1.차종타입 선택1123
 			System.out.println("1.국산차 2.수입차"); int choose = scan.nextInt();
 			if(choose == 1) { RentView.getInstance().국산브랜드조회함수; }
 			else if(choose == 2) {RentView.getInstance().수입브랜드조회함수;}
