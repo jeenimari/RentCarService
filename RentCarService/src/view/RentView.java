@@ -39,7 +39,7 @@ public class RentView { // class start
 	// 차량 선택 프로세스
 	private void selectCarProcess() {
      // 1. 차종 선택 (국산/수입)
-     ArrayList<RentDto> categories =  RentController.getInstance().getCarCategories();
+     ArrayList<RentDto> categories =  RentController.getInstance().getCategoryList();
         
      System.out.println("\n=== 차종 선택 ===");    
      
@@ -53,7 +53,7 @@ public class RentView { // class start
      
      // 2. 브랜드 선택
      ArrayList<RentDto> brands = 
-         RentController.getInstance().getBrandsByCategory(cno);
+         RentController.getInstance().getBrandList(cno);
          
      System.out.println("\n=== 브랜드 선택 ===");
      
@@ -66,10 +66,10 @@ public class RentView { // class start
      
      // 3. 모델 선택
      ArrayList<RentDto> models = 
-         RentController.getInstance().getModelsByBrand(bno);
+         RentController.getInstance().getModelList(bno);
          
      System.out.println("\n=== 모델 선택 ===");
-     for(ModelDTO model : models) {
+     for(RentDto model : models) {
          System.out.println(model.getMno() + ". " + model.getMname());
      }
      
@@ -77,11 +77,11 @@ public class RentView { // class start
      int mno = scan.nextInt();
      
      // 4. 등급 선택
-     ArrayList<GradeDTO> grades = 
-         RentCarController.getInstance().getGradesByModel(mno);
+     ArrayList<RentDto> grades = 
+         RentController.getInstance().getGradeList(mno);
          
      System.out.println("\n=== 등급 선택 ===");
-     for(GradeDTO grade : grades) {
+     for(RentDto grade : grades) {
          System.out.printf("%d. %s (%,d원)\n", 
              grade.getGno(), 
              grade.getGname(), 
@@ -97,18 +97,46 @@ public class RentView { // class start
  
  // 견적 계산
  private void calculateEstimate(int gno) {
-     GradeDTO grade = 
-         RentCarController.getInstance().getGradeInfo(gno);
+     RentDto grade =  RentController.getInstance().getGradeInfo(gno);
          
      System.out.println("\n=== 계약 조건 입력 ===");
      System.out.print("계약기간(개월): ");
      int duration = scan.nextInt();
      
-     System.out.print("보증금(%): ");
-     int deposit = scan.nextInt();
+     // 보증금/선납금 선택 구조 수정
+     System.out.println("\n>> 보증금 / 선납금 선택");
+     System.out.print(">> 1.보증금 2.선납금 : ");
+     int paymentChoice = scan.nextInt();
      
-     System.out.print("선납금(%): ");
-     int prepayment = scan.nextInt();
+     int deposit = 0;
+     int prepayment = 0;
+     
+     // 보증금 선택 시
+     if(paymentChoice == 1) {
+         System.out.print(">> 보증금 비율 선택 (1:0% 2:30% 3:50%) : ");
+         int depositChoice = scan.nextInt();
+         switch(depositChoice) {
+             case 1: deposit = 0; break;
+             case 2: deposit = 30; break;
+             case 3: deposit = 50; break;
+         }
+         System.out.println("보증금 " + deposit + "% 선택됨 (선납금 선택 불가)");
+         prepayment = 0;  // 선납금은 0으로 설정
+         
+     } 
+     // 선납금 선택 시
+     else if(paymentChoice == 2) {
+         System.out.print(">> 선납금 비율 선택 (1:0% 2:30% 3:50%) : ");
+         int prepaymentChoice = scan.nextInt();
+         switch(prepaymentChoice) {
+             case 1: prepayment = 0; break;
+             case 2: prepayment = 30; break;
+             case 3: prepayment = 50; break;
+         }
+         System.out.println("선납금 " + prepayment + "% 선택됨 (보증금 선택 불가)");
+         deposit = 0;  // 보증금은 0으로 설정
+     }
+      
      
      // 견적 계산 및 표시
      int basePrice = grade.getGprice();
@@ -132,14 +160,39 @@ public class RentView { // class start
      System.out.print("연락처: ");
      String phone = scan.nextLine();
      
-     System.out.print("계약유형(1:렌트, 2:리스): ");
+     System.out.print("계약유형(렌트): ");
      int type = scan.nextInt();
+     //보증금/선납금 선택 구조 수정
+     System.out.println("\n>>보증금 또는 선납금 선택하십시오");
+     System.out.print(">>1.보증금 2.선납금 : ");
+     int paymenetChoice = scan.nextInt();
      
-     System.out.print("보증금(%): ");
-     int deposit = scan.nextInt();
+     int deposit = 0;
+     int prepayment = 0;
      
-     System.out.print("선납금(%): ");
-     int prepayment = scan.nextInt();
+     if(paymenetChoice ==1) {
+    	 System.out.print(">>보증금 비율 선택(1:0% 2:30% 3:50%):");
+    	 int depositChoice = scan.nextInt();
+    	 switch(depositChoice) {
+    	 	case 1: deposit = 0; break;
+    	 	case 2: deposit = 30; break;
+    	 	case 3: deposit = 50; break;
+    	 }//switch end
+     System.out.println("보증금" + deposit + "%선택됨(선납금 선택불가)");
+     prepayment = 0;  //선납금 0으로 설정
+     }else if(paymenetChoice ==2) {
+    	 System.out.print(">>선납금 비율 선택(1:0% 2:30% 3:50%):");
+    	 int prepaymentChoice = scan.nextInt();
+    	 switch(prepaymentChoice) {
+    	 	case 1: prepayment = 0; break;
+    	 	case 2: prepayment = 30; break;
+    	 	case 3: prepayment = 50; break;
+    	 }
+    	 System.out.println("선납금" + prepayment + "% 선택됨(보증금 선택 불가)");
+    	 deposit = 0;   //보증금 0으로 설정
+     }
+
+     
      
      System.out.print("잔존가치(%): ");
      int residualValue = scan.nextInt();
@@ -147,13 +200,20 @@ public class RentView { // class start
      System.out.print("계약기간(개월): ");
      int duration = scan.nextInt();
      
-     RentDto dto = new RentDto(
-         0, name, phone, type, deposit, 
-         prepayment, residualValue, duration
-     );
+     RentDto dto = new RentDto( );
+    		 
+     dto.setAname(name);
+     dto.setAphone(phone);
+     dto.setAtype(type);
+     dto.setDeposit(deposit);
+     dto.setPrepayments(prepayment);
+     dto.setResidualValue(residualValue);
+     dto.setDuration(duration);
+    		
+    
      
      boolean result = 
-         RentCarController.getInstance().applyContract(dto);
+         RentController.getInstance().registerApplication(dto); 
          
      if(result) {
          System.out.println("계약 신청이 완료되었습니다!");
