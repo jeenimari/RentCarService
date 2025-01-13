@@ -111,9 +111,7 @@ public class AdminDao extends Dao {
 			}
 			if(cstate && bstate && mstate && gstate) {
 				return true;
-			}
-			
-			
+			}	
 		} catch(SQLException e) {
 			System.out.println(e);
 		}
@@ -211,15 +209,14 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
-					if(dto.getGname().equals(rs.getString("gname")) && dto.getGprice() == rs.getInt("gprice") && dto.getMno() == rs.getInt("mno")) {
+					if(dto.getGname().equals(rs.getString("gname")) && 
+							dto.getGprice() == rs.getInt("gprice") && 
+							dto.getMno() == rs.getInt("mno")) {
 						sql = "update grade set gname = ?, gprice = ?, mno = ? where gname = ? and gprice = ? and mno = ?;";
 						ps = conn.prepareStatement(sql);
-						ps.setString(1, dto.getName());
-						ps.setInt(2, dto.getNewPrice());
-						ps.setInt(3, dto.getNewNo());
-						ps.setString(4, dto.getGname());
-						ps.setInt(5, dto.getGprice());
-						ps.setInt(6, dto.getMno());
+						ps.setString(1, dto.getName()); ps.setInt(2, dto.getNewPrice());
+						ps.setInt(3, dto.getNewNo()); ps.setString(4, dto.getGname());
+						ps.setInt(5, dto.getGprice()); ps.setInt(6, dto.getMno());
 						int count = ps.executeUpdate();
 						if(count == 1) { return true; }
 					}
@@ -275,7 +272,6 @@ public class AdminDao extends Dao {
 					}
 				}
 			}
-			
 		} catch(SQLException e) {
 			System.out.println(e);
 		}

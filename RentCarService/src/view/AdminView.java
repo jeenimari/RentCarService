@@ -61,21 +61,37 @@ public class AdminView {
 	public void addCar() {
 		System.out.println("======== 차량등록 ========");
 		System.out.println("======== 카테고리 ========");
+		System.out.println("카테고리\t    카테고리\n 번호");
+		System.out.println("----------------------");
 		select("car");
+		System.out.println("----------------------");
+		System.out.println("카테고리\t    카테고리\n 번호");
 		System.out.println("======== 카테고리 ========");
 		System.out.print(">> 국산차 / 수입차 : "); String cname = scan.next();
 		System.out.println("======== 브랜드 ========");
+		System.out.println("브랜드\t 브랜드\t  카테고리\n 번호\t\t   번호");
+		System.out.println("-----------------------");
 		select("brand");
+		System.out.println("-----------------------");
+		System.out.println("브랜드\t 브랜드\t  카테고리\n 번호\t\t   번호");
 		System.out.println("======== 브랜드 ========");
 		System.out.print(">> 브랜드 : "); String bname = scan.next();
 		System.out.print(">> 카테고리 번호 : "); int cno = scan.nextInt();
 		System.out.println("======== 모델 ========");
+		System.out.println(" 모델\t      모델\t브랜드\n 번호\t\t\t 번호");
+		System.out.println("-----------------------------");
 		select("model");
+		System.out.println("-----------------------------");
+		System.out.println(" 모델\t      모델\t브랜드\n 번호\t\t\t 번호");
 		System.out.println("======== 모델 ========");
 		System.out.print(">> 모델 : "); String mname = scan.next();
 		System.out.print(">> 브랜드 번호 : "); int bno = scan.nextInt();
 		System.out.println("======== 등급 ========");
+		System.out.println(" 등급\t       등급\t   가격 \t\t   모델\n 번호\t\t\t\t\t   번호");
+		System.out.println("-------------------------------------------------");
 		select("grade");
+		System.out.println("-------------------------------------------------");
+		System.out.println(" 등급\t       등급\t   가격 \t\t   모델\n 번호\t\t\t\t\t   번호");
 		System.out.println("======== 등급 ========");
 		System.out.print(">> 등급 : "); String gname = scan.next();
 		System.out.print(">> 가격 : "); int gprice = scan.nextInt();
@@ -94,13 +110,20 @@ public class AdminView {
 		for(int index = 0; index < result.size(); index++) {
 			Dto dto = result.get(index);
 			if(tableName.equals("car")) {
-				System.out.printf("%d\t%s\n", dto.getCno(), dto.getCname());
+				//System.out.printf("  %d\t  %s\n", dto.getCno(), dto.getCname());
+				System.out.printf("  %-10d %-10s\n", dto.getCno(), dto.getCname());
 			} else if(tableName.equals("brand")) {
-				System.out.printf("%d\t%s\t%d\n", dto.getBno(), dto.getBname(), dto.getCno());
+				//System.out.printf("  %d\t %s\t   %d\n", dto.getBno(), dto.getBname(), dto.getCno());
+				System.out.printf("  %-5d  %-10s% -5d\n", dto.getBno(), dto.getBname(), dto.getCno());
 			} else if(tableName.equals("model")) {
-				System.out.printf("%d\t%s\t%d\n", dto.getMno(), dto.getMname(), dto.getBno());
+				//System.out.printf("   %d\t%-20s%d\n", dto.getMno(), dto.getMname(), dto.getBno());
+				if(dto.getMname().length() > 4) {
+					System.out.printf("  %-10d %-6s %5d\n", dto.getMno(), dto.getMname(), dto.getBno());	
+				} else {					
+					System.out.printf("  %-10d %-8s %4d\n", dto.getMno(), dto.getMname(), dto.getBno());
+				}
 			} else if(tableName.equals("grade")) {
-				System.out.printf("%d\t%s\t%d\t%d\n", dto.getGno(), dto.getGname(), dto.getGprice(), dto.getMno());
+				System.out.printf("  %-10d %-10s %-10d %10d\n", dto.getGno(), dto.getGname(), dto.getGprice(), dto.getMno());
 			}
 		}
 	}
