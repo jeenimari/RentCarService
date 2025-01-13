@@ -22,7 +22,7 @@ mno int unsigned auto_increment,
 mname varchar(30) not null unique,
 bno int unsigned,
 constraint primary key(mno),
-constraint foreign key(bno) references brand(bno)
+constraint foreign key(bno) references brand(bno) on update cascade on delete cascade
 );
 
 
@@ -32,7 +32,7 @@ gname varchar(30) not null,
 gprice int not null,
 mno int unsigned,
 constraint primary key (gno),
-constraint foreign key (mno) references model(mno)
+constraint foreign key (mno) references model(mno) on update cascade on delete cascade
 );
 
 create table apply (
@@ -139,7 +139,13 @@ select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade
 from car 
 inner join brand on car.cno = brand.cno 
 inner join model on brand.bno = model.bno
-inner join grade on model.mno = grade.mno;
+inner join grade on model.mno = grade.mno where brand.bname = "기아";
+
+select brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+from brand inner join model on brand.bno = model.bno inner join grade on model.mno = grade.mno
+where brand.bname = "기아";
+
+select * from grade where gname = "프리미엄" and gprice = 32000000 and mno = 2;
 
 #select * from car where cname = "수입차";
 #select * from brand where bname = "기아";
