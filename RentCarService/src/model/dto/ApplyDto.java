@@ -1,6 +1,6 @@
 package model.dto;
 
-public class AdminDto extends Dto {
+public class ApplyDto extends Dto {
 	private int ano;
 	private String aname;
 	private String aphone;
@@ -10,8 +10,8 @@ public class AdminDto extends Dto {
 	private int residual_value;
 	private int duration;
 	
-	public AdminDto() {}
-	public AdminDto(int ano, String aname, String aphone, 
+	public ApplyDto() {}
+	public ApplyDto(int ano, String aname, String aphone, 
 			int atype, int deposit, int prepayments, int residual_value, int duration) {
 		this.ano = ano; this.aname = aname; this.aphone = aphone;
 		this.atype = atype; this.deposit = deposit; this.prepayments = prepayments;

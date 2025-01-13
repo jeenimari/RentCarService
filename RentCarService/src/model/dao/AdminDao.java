@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import model.dto.AdminDto;
+import model.dto.ApplyDto;
 import model.dto.Dto;
 
 public class AdminDao extends Dao {
@@ -24,14 +24,14 @@ public class AdminDao extends Dao {
 	}
 	
 	/** 1.신청조회 화면 메소드 */
-	public ArrayList<AdminDto> apply() {
-		ArrayList<AdminDto> result = new ArrayList<>();
+	public ArrayList<ApplyDto> apply() {
+		ArrayList<ApplyDto> result = new ArrayList<>();
 		try {
 			String sql = "select * from apply";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				AdminDto ad = new AdminDto(
+				ApplyDto ad = new ApplyDto(
 						rs.getInt("ano"), rs.getString("aname"), rs.getString("aphone"),
 						rs.getInt("atype"), rs.getInt("deposit"), rs.getInt("prepayments"),
 						rs.getInt("residual_value"), rs.getInt("duration"));
@@ -179,8 +179,55 @@ public class AdminDao extends Dao {
 	}
 	
 	/** 5. 차량삭제 화면 처리 메소드 */
-	public void deleteCar() {
-		
+	public String deleteCar(Dto dto) {
+		String sql = "select * from " + dto.getTname() + ";";
+		PreparedStatement ps;
+		ResultSet rs;
+		try {			
+			if(dto.getTname().equals("brand")) {
+				ps = conn.prepareStatement(sql);
+				rs = ps.executeQuery();
+				while(rs.next()) {
+					if(dto.getName().equals(rs.getString("bname"))) {
+						sql = "delete from brand where bname = '" + dto.getName() + "';";
+						ps = conn.prepareStatement(sql);
+						int count = ps.executeUpdate();
+						if(count == 1) { return "브랜드 : " + dto.getName() + " 삭제 성공"; }
+					}
+				}
+			}
+			if(dto.getTname().equals("model")) {
+				ps = conn.prepareStatement(sql);
+				rs = ps.executeQuery();
+				while(rs.next()) {
+					if(dto.getName().equals(rs.getString("mname"))) {
+						sql = "delete from model where mname = '" + dto.getName() + "';";
+						ps = conn.prepareStatement(sql);
+						int count = ps.executeUpdate();
+						if(count == 1) { return "모델 : " + dto.getName() + " 삭제 성공"; }
+					}
+				}
+			}
+			if(dto.getTname().equals("grade")) {
+				ps = conn.prepareStatement(sql);
+				rs = ps.executeQuery();
+				while(rs.next()) {
+					if(dto.getName().equals(rs.getString("gname")) &&
+							dto.getGprice() == rs.getInt("gprice") && dto.getMno() == rs.getInt("mno")) {
+						sql = String.format("delete from grade where gname = '%s' and gprice = '%d' and mno = '%d';",
+								dto.getName(), dto.getGprice(), dto.getMno());
+						ps = conn.prepareStatement(sql);
+						int count = ps.executeUpdate();
+						if(count == 1) { return "등급 : " + dto.getName() + " 삭제 성공"; }
+					}
+				}
+			}
+			
+		} catch(SQLException e) {
+			System.out.println(e);
+		}
+		System.out.println(">> 삭제 실패");
+		return null;
 	}
 	
 }

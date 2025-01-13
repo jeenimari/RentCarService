@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import controller.AdminController;
-import model.dto.AdminDto;
+import model.dto.ApplyDto;
 import model.dto.Dto;
 
 public class AdminView {
@@ -33,8 +33,8 @@ public class AdminView {
 			if(choose == 1) { apply(); }
 			else if(choose == 2) { addCar(); }
 			else if(choose == 3) { findCar(); }
-			else if(choose == 4) {}
-			else if(choose == 5) {}
+			else if(choose == 4) { updateCar(); }
+			else if(choose == 5) { deleteCar(); }
 			else if(choose == 6) {
 				System.out.println(">> 뒤로가기");
 				System.out.println("======== 메인화면 ========");
@@ -45,11 +45,11 @@ public class AdminView {
 	
 	/** 1.신청조회 화면 메소드 */
 	public void apply() {
-		ArrayList<AdminDto> result = AdminController.getInstance().apply();
+		ArrayList<ApplyDto> result = AdminController.getInstance().apply();
 		System.out.println("======== 신청조회 ========");
 		System.out.println(">> 순번\t이름\t전화번호\t\t종류\t보증금\t선납금\t잔존가치\t계약기간");
 		for(int index = 0; index < result.size(); index++) {
-			AdminDto ad = result.get(index);
+			ApplyDto ad = result.get(index);
 			System.out.printf(">> %d\t%s\t%s\t%d\t%d\t%d\t%d\t%d\n",
 					ad.getAno(), ad.getAname(), ad.getAphone(), ad.getAtype(),
 					ad.getDeposit(), ad.getPrepayments(), ad.getResidualValue(), ad.getDuration());
@@ -139,7 +139,61 @@ public class AdminView {
 	
 	/** 5. 차량삭제 화면 메소드 */
 	public void deleteCar() {
-		
+		String result = null;
+		System.out.println("======== 차량삭제 ========");
+		while(true) {
+			System.out.print(">> 1.브랜드 2.모델 3.등급 4.뒤로가기 : ");			
+			int choose = scan.nextInt();
+			if(choose == 1) {
+				System.out.println("======== 브랜드 삭제 ========");
+				select("brand");
+				System.out.println("======== 브랜드 삭제 ========");
+				System.out.print(">> 브랜드 : "); String name = scan.next();
+				Dto dto = new Dto(); dto.setName(name); dto.setTname("brand");
+				result = AdminController.getInstance().deleteCar(dto);
+				if(result != null) {
+					System.out.println(">> " + result);
+					continue;
+				} else {
+					System.out.println(">> 삭제 실패");
+					continue;
+				}
+			}
+			else if(choose == 2) {
+				System.out.println("======== 모델 삭제 ========");
+				select("model");
+				System.out.println("======== 모델 삭제 ========");
+				System.out.print(">> 모델 : "); String name = scan.next();
+				Dto dto = new Dto(); dto.setName(name); dto.setTname("model");
+				result = AdminController.getInstance().deleteCar(dto);
+				if(result != null) {
+					System.out.println(">> " + result);
+					continue;
+				} else {
+					System.out.println(">> 삭제 실패");
+					continue;
+				}
+			}
+			else if(choose == 3) {
+				System.out.println("======== 등급 삭제 ========");
+				select("grade");
+				System.out.println("======== 등급 삭제 ========");
+				System.out.print(">> 등급 : "); String name = scan.next();
+				System.out.print(">> 가격 : "); int gprice = scan.nextInt();
+				System.out.print(">> 모델 번호 : "); int mno = scan.nextInt();
+				Dto dto = new Dto(); dto.setName(name); dto.setTname("grade");
+				dto.setGprice(gprice); dto.setMno(mno);
+				result = AdminController.getInstance().deleteCar(dto);
+				if(result != null) {
+					System.out.println(">> " + result);
+					continue;
+				} else {
+					System.out.println(">> 삭제 실패");
+					continue;
+				}
+			}
+			else if(choose == 4) { System.out.println(">> 뒤로가기"); break; }
+		}
 	}
 	
 }

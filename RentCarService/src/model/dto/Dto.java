@@ -11,6 +11,8 @@ public class Dto {
 	protected String bname;
 	protected String mname;
 	protected String gname;
+	protected String tname;
+	protected String name;
 	
 	// 생성자
 	public Dto() {}
@@ -25,6 +27,8 @@ public class Dto {
 	public String getBname() { return bname; }
 	public String getMname() { return mname; }
 	public String getGname() { return gname; }
+	public String getTname() { return tname; }
+	public String getName() { return name; }
 	
 	//setter
 	public void setCno(int cno) { this.cno = cno; }
@@ -36,11 +40,14 @@ public class Dto {
 	public void setBname(String bname) { this.bname = bname; }
 	public void setMname(String mname) { this.mname = mname; }
 	public void setGname(String gname) { this.gname = gname; }
+	public void setTname(String tname) { this.tname = tname; }
+	public void setName(String name) { this.name = name; }
 
 	@Override
 	public String toString() {
 		return "Dto [cno=" + cno + ", bno=" + bno + ", mno=" + mno + ", gno=" + gno + ", gprice=" + gprice + ", cname="
-				+ cname + ", bname=" + bname + ", mname=" + mname + ", gname=" + gname + "]";
+				+ cname + ", bname=" + bname + ", mname=" + mname + ", gname=" + gname + ", tname=" + tname + 
+				", name=" + name + "]";
 	}
 		
 }

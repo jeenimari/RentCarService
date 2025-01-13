@@ -3,7 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import model.dao.AdminDao;
-import model.dto.AdminDto;
+import model.dto.ApplyDto;
 import model.dto.Dto;
 
 public class AdminController {
@@ -20,8 +20,8 @@ public class AdminController {
 	}
 	
 	/** 1.신청조회 화면 제어 메소드 */
-	public ArrayList<AdminDto> apply() {
-		ArrayList<AdminDto> result = AdminDao.getInstance().apply();
+	public ArrayList<ApplyDto> apply() {
+		ArrayList<ApplyDto> result = AdminDao.getInstance().apply();
 		return result;
 	}
 	
@@ -50,8 +50,9 @@ public class AdminController {
 	}
 	
 	/** 5. 차량삭제 화면 제어 메소드 */
-	public void deleteCar() {
-		
+	public String deleteCar(Dto dto) {
+		String result = AdminDao.getInstance().deleteCar(dto);
+		return result;
 	}
 	
 }
