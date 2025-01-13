@@ -22,7 +22,7 @@ mno int unsigned auto_increment,
 mname varchar(30) not null unique,
 bno int unsigned,
 constraint primary key(mno),
-constraint foreign key(bno) references brand(bno)
+constraint foreign key(bno) references brand(bno) on update cascade on delete cascade
 );
 
 
@@ -32,7 +32,7 @@ gname varchar(30) not null,
 gprice int not null,
 mno int unsigned,
 constraint primary key (gno),
-constraint foreign key (mno) references model(mno)
+constraint foreign key (mno) references model(mno) on update cascade on delete cascade
 );
 
 create table apply (
@@ -107,6 +107,51 @@ insert into apply(aname, aphone, atype, deposit, prepayments, residual_value, du
 values ('강호동', '010-2222-2222', 1, 30, 30, 40, 48);
 insert into apply(aname, aphone, atype, deposit, prepayments, residual_value, duration)
 values ('신동엽', '010-3333-3333', 2, 50, 50, 30, 36);
+
+# 조인 연습
+select * from car, brand;
+select * from car inner join brand on car.cno = brand.cno;
+select * from car inner join brand on car.cno = brand.cno inner join model on brand.bno = model.bno;
+
+select * from car inner join brand on car.cno = brand.cno 
+inner join model on brand.bno = model.bno
+inner join grade on model.mno = grade.mno;
+
+select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+from car 
+inner join brand on car.cno = brand.cno 
+inner join model on brand.bno = model.bno
+inner join grade on model.mno = grade.mno;
+
+select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+from car 
+inner join brand on car.cno = brand.cno 
+inner join model on brand.bno = model.bno
+inner join grade on model.mno = grade.mno where car.cno = 1;
+
+select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+from car 
+inner join brand on car.cno = brand.cno 
+inner join model on brand.bno = model.bno
+inner join grade on model.mno = grade.mno where car.cname = "국산차";
+
+select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+from car 
+inner join brand on car.cno = brand.cno 
+inner join model on brand.bno = model.bno
+inner join grade on model.mno = grade.mno where brand.bname = "기아";
+
+select brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+from brand inner join model on brand.bno = model.bno inner join grade on model.mno = grade.mno
+where brand.bname = "기아";
+
+select * from grade where gname = "프리미엄" and gprice = 32000000 and mno = 2;
+
+#select * from car where cname = "수입차";
+#select * from brand where bname = "기아";
+#insert into car(cname) values ("수입차");
+#delete from car where cname = "전기차";
+#delete from grade where gname = "노블레스" and gprice = 36000000 and mno = 5;
 
 # 테이블 확인
 select * from car;

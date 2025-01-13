@@ -9,6 +9,9 @@ import model.dto.RentDto;
 
 
 
+
+
+
 public class RentView { // class start
 	private static RentView instance = new RentView();
 	private RentView() {}
