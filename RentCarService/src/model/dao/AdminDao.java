@@ -174,8 +174,61 @@ public class AdminDao extends Dao {
 	}
 	
 	/** 4. 차량수정 화면 처리 메소드 */
-	public void updateCar() {
-		
+	public boolean updateCar(Dto dto) {
+		String sql = "select * from " + dto.getTname() + ";";
+		PreparedStatement ps;
+		ResultSet rs;
+		try {
+			if(dto.getTname().equals("brand")) {
+				ps = conn.prepareStatement(sql);
+				rs = ps.executeQuery();
+				while(rs.next()) {
+					if(dto.getBname().equals(rs.getString("bname"))) {
+						sql = "update brand set bname = ? where bname = ?;";
+						ps = conn.prepareStatement(sql);
+						ps.setString(1, dto.getName());
+						ps.setString(2, dto.getBname());
+						int count = ps.executeUpdate();
+						if(count == 1) { return true; }
+					}
+				}
+			}
+			if(dto.getTname().equals("model")) {
+				ps = conn.prepareStatement(sql);
+				rs = ps.executeQuery();
+				while(rs.next()) {
+					if(dto.getMname().equals(rs.getString("mname"))) {
+						sql = "update model set mname = ? where mname = ?;";
+						ps = conn.prepareStatement(sql);
+						ps.setString(1, dto.getName());
+						ps.setString(2, dto.getMname());
+						int count = ps.executeUpdate();
+						if(count == 1) { return true; }
+					}
+				}
+			}
+			if(dto.getTname().equals("grade")) {
+				ps = conn.prepareStatement(sql);
+				rs = ps.executeQuery();
+				while(rs.next()) {
+					if(dto.getGname().equals(rs.getString("gname")) && dto.getGprice() == rs.getInt("gprice") && dto.getMno() == rs.getInt("mno")) {
+						sql = "update grade set gname = ?, gprice = ?, mno = ? where gname = ? and gprice = ? and mno = ?;";
+						ps = conn.prepareStatement(sql);
+						ps.setString(1, dto.getName());
+						ps.setInt(2, dto.getNewPrice());
+						ps.setInt(3, dto.getNewNo());
+						ps.setString(4, dto.getGname());
+						ps.setInt(5, dto.getGprice());
+						ps.setInt(6, dto.getMno());
+						int count = ps.executeUpdate();
+						if(count == 1) { return true; }
+					}
+				}
+			}
+		} catch(SQLException e) {
+			System.out.println(e);
+		}
+		return false;
 	}
 	
 	/** 5. 차량삭제 화면 처리 메소드 */
@@ -226,7 +279,6 @@ public class AdminDao extends Dao {
 		} catch(SQLException e) {
 			System.out.println(e);
 		}
-		System.out.println(">> 삭제 실패");
 		return null;
 	}
 	

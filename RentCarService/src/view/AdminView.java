@@ -134,7 +134,49 @@ public class AdminView {
 	
 	/** 4. 차량수정 화면 메소드 */
 	public void updateCar() {
-		
+		System.out.println("======== 차량수정 ========");
+		while(true) {			
+			System.out.print(">> 1. 브랜드 2.모델 3.등급 4. 뒤로가기 : ");
+			int choose = scan.nextInt();
+			if(choose == 1) {
+				System.out.println("======== 브랜드 ========");
+				select("brand");
+				System.out.println("======== 브랜드 ========");
+				System.out.print(">> 수정 전 브랜드 : "); String bname = scan.next();
+				System.out.print(">> 수정 후 브랜드 : "); String name = scan.next();
+				Dto dto = new Dto(); dto.setBname(bname); dto.setName(name); dto.setTname("brand");
+				boolean result = AdminController.getInstance().updateCar(dto);
+				if(result) { System.out.println(">> 브랜드 수정 성공"); } else { System.out.println(">> 브랜드 수정 실패"); }
+				
+			}
+			else if(choose == 2) {
+				System.out.println("======== 모델 ========");
+				select("model");
+				System.out.println("======== 모델 ========");
+				System.out.print(">> 수정 전 모델 : "); String mname = scan.next();
+				System.out.print(">> 수정 후 모델 : "); String name = scan.next();
+				Dto dto = new Dto(); dto.setMname(mname); dto.setName(name); dto.setTname("model");
+				boolean result = AdminController.getInstance().updateCar(dto);
+				if(result) { System.out.println(">> 모델 수정 성공"); } else { System.out.println(">> 모델 수정 실패"); }
+			}
+			else if(choose == 3) {
+				System.out.println("======== 등급 ========");
+				select("grade");
+				System.out.println("======== 등급 ========");
+				System.out.print(">> 수정 전 등급 : "); String gname = scan.next();
+				System.out.print(">> 수정 후 등급 : "); String name = scan.next();
+				System.out.print(">> 수정 전 가격 : "); int gprice = scan.nextInt();
+				System.out.print(">> 수정 후 가격 : "); int newPrice = scan.nextInt();
+				System.out.print(">> 수정 전 모델 번호 : "); int mno = scan.nextInt();
+				System.out.print(">> 수정 후 모델 번호 : "); int newNo = scan.nextInt();
+				Dto dto = new Dto();
+				dto.setGname(gname); dto.setName(name); dto.setGprice(gprice); dto.setNewPrice(newPrice);
+				dto.setMno(mno); dto.setNewNo(newNo); dto.setTname("grade");
+				boolean result = AdminController.getInstance().updateCar(dto);
+				if(result) { System.out.println(">> 등급 수정 성공"); } else { System.out.println(">> 등급 수정 실패"); }
+			}
+			else if(choose == 4) { System.out.println(">> 뒤로가기"); break; }
+		}
 	}
 	
 	/** 5. 차량삭제 화면 메소드 */

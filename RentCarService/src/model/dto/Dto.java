@@ -6,7 +6,9 @@ public class Dto {
 	protected int bno;
 	protected int mno;
 	protected int gno;
+	protected int newNo;
 	protected int gprice;
+	protected int newPrice;
 	protected String cname;
 	protected String bname;
 	protected String mname;
@@ -22,6 +24,8 @@ public class Dto {
 	public int getBno() { return bno; }
 	public int getMno() { return mno; }
 	public int getGno() { return gno; }
+	public int getNewNo() { return newNo; }
+	public int getNewPrice() {return newPrice; }
 	public int getGprice() { return gprice; }
 	public String getCname() { return cname; }
 	public String getBname() { return bname; }
@@ -35,7 +39,9 @@ public class Dto {
 	public void setBno(int bno) { this.bno = bno; }
 	public void setMno(int mno) { this.mno = mno; }
 	public void setGno(int gno) { this.gno = gno; }
+	public void setNewNo(int newNo) { this.newNo = newNo; }
 	public void setGprice(int gprice) { this.gprice = gprice; }
+	public void setNewPrice(int newPrice) { this.newPrice = newPrice; }
 	public void setCname(String cname) { this.cname = cname; }
 	public void setBname(String bname) { this.bname = bname; }
 	public void setMname(String mname) { this.mname = mname; }
@@ -45,9 +51,9 @@ public class Dto {
 
 	@Override
 	public String toString() {
-		return "Dto [cno=" + cno + ", bno=" + bno + ", mno=" + mno + ", gno=" + gno + ", gprice=" + gprice + ", cname="
-				+ cname + ", bname=" + bname + ", mname=" + mname + ", gname=" + gname + ", tname=" + tname + 
-				", name=" + name + "]";
+		return "Dto [cno=" + cno + ", bno=" + bno + ", mno=" + mno + ", gno=" + gno + ", gprice=" + gprice
+				+ ", newPrice=" + newPrice + ", cname=" + cname + ", bname=" + bname + ", mname=" + mname + ", gname="
+				+ gname + ", tname=" + tname + ", name=" + name + "]";
 	}
 		
 }
