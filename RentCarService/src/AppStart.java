@@ -1,9 +1,9 @@
 
-import view.RentView;
+import view.MainView;
 
 public class AppStart {
 	public static void main(String[] args) {
-		RentView.getInstance().run();
+		MainView.getInstance().run();
 	}
 	
 }
