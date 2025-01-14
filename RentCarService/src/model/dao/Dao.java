@@ -11,9 +11,9 @@ public class Dao {
 	private String dburl = "jdbc:mysql://localhost:3306/rentcar";
 	/** 연동할 DB서버의 계정명 */
 	private String dbuser = "root";
-	/** 연동할 DB서버의 비밀번호 */
-	// private String dbpwd = "1234";
-	private String dbpwd = "2965";
+	/** 연동할 DB서버의 비밀번호 */    
+	 private String dbpwd = "1234";
+	//private String dbpwd = "2965";
 
 	protected Dao() {
 		try {
