@@ -335,4 +335,9 @@ public class LeaseDao extends Dao {
     }
     return list;
   }
+
+  public LeaseDto getGradeInfo(int gno) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getGradeInfo'");
+  }
 } // class end
