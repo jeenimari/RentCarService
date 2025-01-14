@@ -109,43 +109,43 @@ insert into apply(aname, aphone, atype, deposit, prepayments, residual_value, du
 values ('신동엽', '010-3333-3333', 2, 50, 50, 30, 36);
 
 # 조인 연습
-select * from car, brand;
-select * from car inner join brand on car.cno = brand.cno;
-select * from car inner join brand on car.cno = brand.cno inner join model on brand.bno = model.bno;
+-- select * from car, brand;
+-- select * from car inner join brand on car.cno = brand.cno;
+-- select * from car inner join brand on car.cno = brand.cno inner join model on brand.bno = model.bno;
 
-select * from car inner join brand on car.cno = brand.cno 
-inner join model on brand.bno = model.bno
-inner join grade on model.mno = grade.mno;
+-- select * from car inner join brand on car.cno = brand.cno 
+-- inner join model on brand.bno = model.bno
+-- inner join grade on model.mno = grade.mno;
 
-select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
-from car 
-inner join brand on car.cno = brand.cno 
-inner join model on brand.bno = model.bno
-inner join grade on model.mno = grade.mno;
+-- select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+-- from car 
+-- inner join brand on car.cno = brand.cno 
+-- inner join model on brand.bno = model.bno
+-- inner join grade on model.mno = grade.mno;
 
-select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
-from car 
-inner join brand on car.cno = brand.cno 
-inner join model on brand.bno = model.bno
-inner join grade on model.mno = grade.mno where car.cno = 1;
+-- select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+-- from car 
+-- inner join brand on car.cno = brand.cno 
+-- inner join model on brand.bno = model.bno
+-- inner join grade on model.mno = grade.mno where car.cno = 1;
 
-select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
-from car 
-inner join brand on car.cno = brand.cno 
-inner join model on brand.bno = model.bno
-inner join grade on model.mno = grade.mno where car.cname = "국산차";
+-- select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+-- from car 
+-- inner join brand on car.cno = brand.cno 
+-- inner join model on brand.bno = model.bno
+-- inner join grade on model.mno = grade.mno where car.cname = "국산차";
 
-select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
-from car 
-inner join brand on car.cno = brand.cno 
-inner join model on brand.bno = model.bno
-inner join grade on model.mno = grade.mno where brand.bname = "기아";
+-- select car.cno, car.cname, brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+-- from car 
+-- inner join brand on car.cno = brand.cno 
+-- inner join model on brand.bno = model.bno
+-- inner join grade on model.mno = grade.mno where brand.bname = "기아";
 
-select brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
-from brand inner join model on brand.bno = model.bno inner join grade on model.mno = grade.mno
-where brand.bname = "기아";
+-- select brand.bno, brand.bname, model.mno, model.mname, grade.gno, grade.gname, grade.gprice
+-- from brand inner join model on brand.bno = model.bno inner join grade on model.mno = grade.mno
+-- where brand.bname = "기아";
 
-select * from grade where gname = "프리미엄" and gprice = 32000000 and mno = 2;
+-- select * from grade where gname = "프리미엄" and gprice = 32000000 and mno = 2;
 
 #select * from car where cname = "수입차";
 #select * from brand where bname = "기아";

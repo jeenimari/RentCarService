@@ -45,8 +45,9 @@ public class AdminController {
 	}
 	
 	/** 4. 차량수정 화면 제어 메소드 */
-	public void updateCar() {
-		
+	public boolean updateCar(Dto dto) {
+		boolean result = AdminDao.getInstance().updateCar(dto);
+		return result;
 	}
 	
 	/** 5. 차량삭제 화면 제어 메소드 */
