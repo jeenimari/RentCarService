@@ -215,17 +215,6 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
-					/*if(dto.getGname().equals(rs.getString("gname")) && 
-							dto.getGprice() == rs.getInt("gprice") && 
-							dto.getMno() == rs.getInt("mno")) {
-						sql = "update grade set gname = ?, gprice = ?, mno = ? where gname = ? and gprice = ? and mno = ?;";
-						ps = conn.prepareStatement(sql);
-						ps.setString(1, dto.getName()); ps.setInt(2, dto.getNewPrice());
-						ps.setInt(3, dto.getNewNo()); ps.setString(4, dto.getGname());
-						ps.setInt(5, dto.getGprice()); ps.setInt(6, dto.getMno());
-						int count = ps.executeUpdate();
-						if(count == 1) { return true; }
-					}*/
 					if(dto.getGno() == rs.getInt("gno")) {
 						sql = "update grade set gname = ?, gprice = ? where gno = ?;";
 						ps = conn.prepareStatement(sql);
@@ -253,14 +242,6 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
-					/*
-					if(dto.getName().equals(rs.getString("bname"))) {
-						sql = "delete from brand where bname = '" + dto.getName() + "';";
-						ps = conn.prepareStatement(sql);
-						int count = ps.executeUpdate();
-						if(count == 1) { return "브랜드 : " + dto.getName() + " 삭제 성공"; }
-					}
-					*/
 					if(dto.getBno() == rs.getInt("bno")) {
 						sql = "delete from brand where bno = ?;";
 						ps = conn.prepareStatement(sql);
@@ -274,14 +255,6 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
-					/*
-					if(dto.getName().equals(rs.getString("mname"))) {
-						sql = "delete from model where mname = '" + dto.getName() + "';";
-						ps = conn.prepareStatement(sql);
-						int count = ps.executeUpdate();
-						if(count == 1) { return "모델 : " + dto.getName() + " 삭제 성공"; }
-					}
-					*/
 					if(dto.getMno() == rs.getInt("mno")) {
 						sql = "delete from model where mno = ?;";
 						ps = conn.prepareStatement(sql);
@@ -295,16 +268,6 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
-					/*
-					if(dto.getName().equals(rs.getString("gname")) &&
-							dto.getGprice() == rs.getInt("gprice") && dto.getMno() == rs.getInt("mno")) {
-						sql = String.format("delete from grade where gname = '%s' and gprice = '%d' and mno = '%d';",
-								dto.getName(), dto.getGprice(), dto.getMno());
-						ps = conn.prepareStatement(sql);
-						int count = ps.executeUpdate();
-						if(count == 1) { return "등급 : " + dto.getName() + " 삭제 성공"; }
-					}
-					*/
 					if(dto.getGno() == rs.getInt("gno")) {
 						sql = "delete from grade where gno = ?;";
 						ps = conn.prepareStatement(sql);

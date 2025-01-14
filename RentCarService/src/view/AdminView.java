@@ -93,9 +93,9 @@ public class AdminView {
 		System.out.println("======== 등급 ========");
 		System.out.println(" 등급          등 급                  가 격\t\t   모델");
 		System.out.println(" 번호                                    \t\t   번호");
-		System.out.println("-------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------");
 		select("grade");
-		System.out.println("-------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------");
 		System.out.println(" 등급          등 급                  가 격\t\t   모델");
 		System.out.println(" 번호                                    \t\t   번호");
 		System.out.println("======== 등급 ========");
@@ -116,17 +116,13 @@ public class AdminView {
 		for(int index = 0; index < result.size(); index++) {
 			Dto dto = result.get(index);
 			if(tableName.equals("car")) {
-				//System.out.printf("  %d\t  %s\n", dto.getCno(), dto.getCname());
 				System.out.printf("  %-10d %-10s\n", dto.getCno(), dto.getCname());
 			} else if(tableName.equals("brand")) {
-				//System.out.printf("  %d\t %s\t   %d\n", dto.getBno(), dto.getBname(), dto.getCno());
-				//System.out.printf("  %-5d  %-10s% -5d\n", dto.getBno(), dto.getBname(), dto.getCno());
 				System.out.printf("  %-8d   %-8s\t    %d\n", dto.getBno(), dto.getBname(), dto.getCno());
 			} else if(tableName.equals("model")) {
-				//System.out.printf("   %d\t%-20s%d\n", dto.getMno(), dto.getMname(), dto.getBno());
 				System.out.printf("  %-10d%-6s\t%5d\n", dto.getMno(), dto.getMname(), dto.getBno());
 			} else if(tableName.equals("grade")) {
-				System.out.printf("  %-10d %-10s    \t%10d %10d\n", dto.getGno(), dto.getGname(), dto.getGprice(), dto.getMno());
+				System.out.printf("  %-10d %-10s    \t%10d\t   %10d\n", dto.getGno(), dto.getGname(), dto.getGprice(), dto.getMno());
 			}
 		}
 	}
@@ -135,25 +131,19 @@ public class AdminView {
 	public void findCar() {
 		ArrayList<Dto> result = AdminController.getInstance().findCar();
 		System.out.println("======== 현재 등록된 차량 ========");
-		System.out.println("카테고리\t카테고리명\t  브랜드\t브랜드명\t\t모델\t모델명\t\t등급\t    등급명\t      가격");
+		System.out.println("카테고리\t카테고리명\t  브랜드\t브랜드명\t\t모델\t모델명\t\t등급\t    등급명\t         가격");
 		System.out.println(" 번호\t\t   번호\t\t\t번호\t\t\t번호");
 		System.out.println("------------------------------------------------------------------------------"
 				+ "---------------------------");
 		for(int index = 0; index < result.size(); index++) {
 			Dto dto = result.get(index);
-			if(dto.getMname().length() > 4) {
-				System.out.printf("  %d      %s      %d     %-7s      %3d     %-10s    %d    %10s    %15d\n",
-						dto.getCno(), dto.getCname(), dto.getBno(), dto.getBname(), dto.getMno(), dto.getMname(), 
-						dto.getGno(), dto.getGname(), dto.getGprice());
-			} else {
-				System.out.printf("  %d      %s      %d     %-7s      %3d     %-10s      %d    %10s    %15d\n",
-						dto.getCno(), dto.getCname(), dto.getBno(), dto.getBname(), dto.getMno(), dto.getMname(), 
-						dto.getGno(), dto.getGname(), dto.getGprice());
-			}
+			System.out.printf("  %d\t %s\t    %d    %-7s\t %-5d %-10s\t %-5d\t   %-5s\t%15d\n",
+					dto.getCno(), dto.getCname(), dto.getBno(), dto.getBname(), dto.getMno(), dto.getMname(), 
+					dto.getGno(), dto.getGname(), dto.getGprice());
 		}
 		System.out.println("------------------------------------------------------------------------------"
 				+ "---------------------------");
-		System.out.println("카테고리\t카테고리명\t  브랜드\t브랜드명\t\t모델\t모델명\t\t등급\t    등급명\t      가격");
+		System.out.println("카테고리\t카테고리명\t  브랜드\t브랜드명\t\t모델\t모델명\t\t등급\t    등급명\t         가격");
 		System.out.println(" 번호\t\t   번호\t\t\t번호\t\t\t번호");
 		System.out.println("======== 현재 등록된 차량 ========");
 	}
@@ -191,10 +181,8 @@ public class AdminView {
 				System.out.println(" 모델         모 델         브랜드");
 				System.out.println(" 번호                       번호");
 				System.out.println("======== 모델 ========");
-				//System.out.print(">> 수정 전 모델 : "); String mname = scan.next();
 				System.out.print(">> 모델 번호 : "); int mno = scan.nextInt();
 				System.out.print(">> 새로운 모델 : "); String mname = scan.next();
-				//Dto dto = new Dto(); dto.setMname(mname); dto.setName(name); dto.setTname("model");
 				Dto dto = new Dto(); dto.setMname(mname); dto.setMno(mno); dto.setTname("model");
 				boolean result = AdminController.getInstance().updateCar(dto);
 				if(result) { System.out.println(">> 모델 수정 성공"); } else { System.out.println(">> 모델 수정 실패"); }
@@ -203,24 +191,16 @@ public class AdminView {
 				System.out.println("======== 등급 ========");
 				System.out.println(" 등급          등 급                  가 격\t\t   모델");
 				System.out.println(" 번호                                    \t\t   번호");
-				System.out.println("-------------------------------------------------------");
+				System.out.println("---------------------------------------------------------------");
 				select("grade");
-				System.out.println("-------------------------------------------------------");
+				System.out.println("---------------------------------------------------------------");
 				System.out.println(" 등급          등 급                  가 격\t\t   모델");
 				System.out.println(" 번호                                    \t\t   번호");
 				System.out.println("======== 등급 ========");
 				System.out.print(">> 수정할 등급 번호 : "); int gno = scan.nextInt();
 				System.out.print(">> 새로운 등급 : "); String gname = scan.next();
 				System.out.print(">> 새로운 가격 : "); int gprice = scan.nextInt();
-				//System.out.print(">> 수정 전 등급 : "); String gname = scan.next();
-				//System.out.print(">> 수정 후 등급 : "); String name = scan.next();
-				//System.out.print(">> 수정 전 가격 : "); int gprice = scan.nextInt();
-				//System.out.print(">> 수정 후 가격 : "); int newPrice = scan.nextInt();
-				//System.out.print(">> 수정 전 모델 번호 : "); int mno = scan.nextInt();
-				//System.out.print(">> 수정 후 모델 번호 : "); int newNo = scan.nextInt();
 				Dto dto = new Dto();
-				//dto.setGname(gname); dto.setName(name); dto.setGprice(gprice); dto.setNewPrice(newPrice);
-				//dto.setMno(mno); dto.setNewNo(newNo); dto.setTname("grade");
 				dto.setGno(gno); dto.setGname(gname); dto.setGprice(gprice); dto.setTname("grade");
 				boolean result = AdminController.getInstance().updateCar(dto);
 				if(result) { System.out.println(">> 등급 수정 성공"); } else { System.out.println(">> 등급 수정 실패"); }
@@ -248,8 +228,6 @@ public class AdminView {
 				System.out.println("======== 브랜드 삭제 ========");
 				System.out.print(">> 브랜드 번호 : "); int bno = scan.nextInt();
 				Dto dto = new Dto(); dto.setBno(bno); dto.setTname("brand");
-				//System.out.print(">> 브랜드 : "); String name = scan.next();
-				//Dto dto = new Dto(); dto.setName(name); dto.setTname("brand");
 				result = AdminController.getInstance().deleteCar(dto);
 				if(result != null) {
 					System.out.println(">> " + result);
@@ -271,8 +249,6 @@ public class AdminView {
 				System.out.println("======== 모델 삭제 ========");
 				System.out.print(">> 모델 번호 : "); int mno = scan.nextInt();
 				Dto dto = new Dto(); dto.setMno(mno); dto.setTname("model");
-				//System.out.print(">> 모델 : "); String name = scan.next();
-				//Dto dto = new Dto(); dto.setName(name); dto.setTname("model");
 				result = AdminController.getInstance().deleteCar(dto);
 				if(result != null) {
 					System.out.println(">> " + result);
@@ -286,18 +262,13 @@ public class AdminView {
 				System.out.println("======== 등급 삭제 ========");
 				System.out.println(" 등급          등 급                  가 격\t\t   모델");
 				System.out.println(" 번호                                    \t\t   번호");
-				System.out.println("-------------------------------------------------------");
+				System.out.println("---------------------------------------------------------------");
 				select("grade");
-				System.out.println("-------------------------------------------------------");
+				System.out.println("---------------------------------------------------------------");
 				System.out.println(" 등급          등 급                  가 격\t\t   모델");
 				System.out.println(" 번호                                    \t\t   번호");
 				System.out.println("======== 등급 삭제 ========");
 				System.out.print(">> 등급 번호 : "); int gno = scan.nextInt();
-				//System.out.print(">> 등급 : "); String name = scan.next();
-				//System.out.print(">> 가격 : "); int gprice = scan.nextInt();
-				//System.out.print(">> 모델 번호 : "); int mno = scan.nextInt();
-				//Dto dto = new Dto(); dto.setName(name); dto.setTname("grade");
-				//dto.setGprice(gprice); dto.setMno(mno);
 				Dto dto = new Dto(); dto.setGno(gno); dto.setTname("grade");
 				result = AdminController.getInstance().deleteCar(dto);
 				if(result != null) {
