@@ -48,6 +48,7 @@ public class AdminDao extends Dao {
 	public boolean addCar(Dto dto) {
 		boolean cstate = false; boolean bstate = false;
 		boolean mstate = false; boolean gstate = false;
+		int ccount = 0, bcount = 0, mcount = 0, gcount = 0;
 		try {
 			String sql = "select * from car;";
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -56,6 +57,7 @@ public class AdminDao extends Dao {
 				if(dto.getCname().equals(rs.getString("cname"))) {
 					cstate = true;
 				}
+				ccount++;
 			}
 			sql = "select * from brand;";
 			ps = conn.prepareStatement(sql);
@@ -64,6 +66,7 @@ public class AdminDao extends Dao {
 				if(dto.getBname().equals(rs.getString("bname"))) {
 					bstate = true;
 				}
+				bcount++;
 			}
 			sql = "select * from model;";
 			ps = conn.prepareStatement(sql);
@@ -72,6 +75,7 @@ public class AdminDao extends Dao {
 				if(dto.getMname().equals(rs.getString("mname"))) {
 					mstate = true;
 				}
+				mcount++;
 			}
 			sql = "select * from grade;";
 			ps = conn.prepareStatement(sql);
@@ -80,6 +84,7 @@ public class AdminDao extends Dao {
 				if(dto.getGname().equals(rs.getString("gname")) && dto.getMno() == rs.getInt("mno")) {
 					gstate = true;
 				}
+				gcount++;
 			}
 			if(cstate == false) {
 				sql = "insert into car(cname) values (?);";
@@ -89,23 +94,24 @@ public class AdminDao extends Dao {
 				if(count == 1) { cstate = true; }
 			}
 			if(bstate == false) {
-				sql = "insert into brand(bname, cno) values (?, ?);";
+				sql = "insert into brand(bno, bname, cno) values (?, ?, ?);";
 				ps = conn.prepareStatement(sql);
-				ps.setString(1, dto.getBname()); ps.setInt(2, dto.getCno());
+				ps.setInt(1, ++bcount); ps.setString(2, dto.getBname()); ps.setInt(3, dto.getCno());
 				int count = ps.executeUpdate();
 				if(count == 1) { bstate = true; }
 			}
 			if(mstate == false) {
-				sql = "insert into model(mname, bno) values (?, ?);";
+				sql = "insert into model(mno, mname, bno) values (?, ?, ?);";
 				ps = conn.prepareStatement(sql);
-				ps.setString(1, dto.getMname()); ps.setInt(2, dto.getBno());
+				ps.setInt(1, ++mcount); ps.setString(2, dto.getMname()); ps.setInt(3, dto.getBno());
 				int count = ps.executeUpdate();
 				if(count == 1) { mstate = true; }
 			}
 			if(gstate == false) {
-				sql = "insert into grade(gname, gprice, mno) values (?, ?, ?);";
+				sql = "insert into grade(gno, gname, gprice, mno) values (?, ?, ?, ?);";
 				ps = conn.prepareStatement(sql);
-				ps.setString(1, dto.getGname()); ps.setInt(2, dto.getGprice()); ps.setInt(3, dto.getMno());
+				ps.setInt(1, ++gcount); ps.setString(2, dto.getGname()); 
+				ps.setInt(3, dto.getGprice()); ps.setInt(4, dto.getMno());
 				int count = ps.executeUpdate();
 				if(count == 1) { gstate = true; }
 			}
@@ -156,7 +162,7 @@ public class AdminDao extends Dao {
 					+ "from car "
 					+ "inner join brand on car.cno = brand.cno "
 					+ "inner join model on brand.bno = model.bno "
-					+ "inner join grade on model.mno = grade.mno;";
+					+ "inner join grade on model.mno = grade.mno order by grade.gno;";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
@@ -181,11 +187,11 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
-					if(dto.getBname().equals(rs.getString("bname"))) {
-						sql = "update brand set bname = ? where bname = ?;";
+					if(dto.getBno() == rs.getInt("bno")) {
+						sql = "update brand set bname = ? where bno = ?;";
 						ps = conn.prepareStatement(sql);
-						ps.setString(1, dto.getName());
-						ps.setString(2, dto.getBname());
+						ps.setString(1, dto.getBname());
+						ps.setInt(2, dto.getBno());
 						int count = ps.executeUpdate();
 						if(count == 1) { return true; }
 					}
@@ -195,11 +201,11 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
-					if(dto.getMname().equals(rs.getString("mname"))) {
-						sql = "update model set mname = ? where mname = ?;";
+					if(dto.getMno() == rs.getInt("mno")) {
+						sql = "update model set mname = ? where mno = ?;";
 						ps = conn.prepareStatement(sql);
-						ps.setString(1, dto.getName());
-						ps.setString(2, dto.getMname());
+						ps.setString(1, dto.getMname());
+						ps.setInt(2, dto.getMno());
 						int count = ps.executeUpdate();
 						if(count == 1) { return true; }
 					}
@@ -209,7 +215,7 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
-					if(dto.getGname().equals(rs.getString("gname")) && 
+					/*if(dto.getGname().equals(rs.getString("gname")) && 
 							dto.getGprice() == rs.getInt("gprice") && 
 							dto.getMno() == rs.getInt("mno")) {
 						sql = "update grade set gname = ?, gprice = ?, mno = ? where gname = ? and gprice = ? and mno = ?;";
@@ -217,6 +223,15 @@ public class AdminDao extends Dao {
 						ps.setString(1, dto.getName()); ps.setInt(2, dto.getNewPrice());
 						ps.setInt(3, dto.getNewNo()); ps.setString(4, dto.getGname());
 						ps.setInt(5, dto.getGprice()); ps.setInt(6, dto.getMno());
+						int count = ps.executeUpdate();
+						if(count == 1) { return true; }
+					}*/
+					if(dto.getGno() == rs.getInt("gno")) {
+						sql = "update grade set gname = ?, gprice = ? where gno = ?;";
+						ps = conn.prepareStatement(sql);
+						ps.setString(1, dto.getGname());
+						ps.setInt(2, dto.getGprice());
+						ps.setInt(3, dto.getGno());
 						int count = ps.executeUpdate();
 						if(count == 1) { return true; }
 					}
@@ -238,11 +253,20 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
+					/*
 					if(dto.getName().equals(rs.getString("bname"))) {
 						sql = "delete from brand where bname = '" + dto.getName() + "';";
 						ps = conn.prepareStatement(sql);
 						int count = ps.executeUpdate();
 						if(count == 1) { return "브랜드 : " + dto.getName() + " 삭제 성공"; }
+					}
+					*/
+					if(dto.getBno() == rs.getInt("bno")) {
+						sql = "delete from brand where bno = ?;";
+						ps = conn.prepareStatement(sql);
+						ps.setInt(1, dto.getBno());
+						int count = ps.executeUpdate();
+						if(count == 1) { return "브랜드 : " + dto.getBno() + "번 삭제 성공"; }
 					}
 				}
 			}
@@ -250,11 +274,20 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
+					/*
 					if(dto.getName().equals(rs.getString("mname"))) {
 						sql = "delete from model where mname = '" + dto.getName() + "';";
 						ps = conn.prepareStatement(sql);
 						int count = ps.executeUpdate();
 						if(count == 1) { return "모델 : " + dto.getName() + " 삭제 성공"; }
+					}
+					*/
+					if(dto.getMno() == rs.getInt("mno")) {
+						sql = "delete from model where mno = ?;";
+						ps = conn.prepareStatement(sql);
+						ps.setInt(1, dto.getMno());
+						int count = ps.executeUpdate();
+						if(count == 1) { return "모델 : " + dto.getMno() + "번 삭제 성공"; }
 					}
 				}
 			}
@@ -262,6 +295,7 @@ public class AdminDao extends Dao {
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()) {
+					/*
 					if(dto.getName().equals(rs.getString("gname")) &&
 							dto.getGprice() == rs.getInt("gprice") && dto.getMno() == rs.getInt("mno")) {
 						sql = String.format("delete from grade where gname = '%s' and gprice = '%d' and mno = '%d';",
@@ -269,6 +303,14 @@ public class AdminDao extends Dao {
 						ps = conn.prepareStatement(sql);
 						int count = ps.executeUpdate();
 						if(count == 1) { return "등급 : " + dto.getName() + " 삭제 성공"; }
+					}
+					*/
+					if(dto.getGno() == rs.getInt("gno")) {
+						sql = "delete from grade where gno = ?;";
+						ps = conn.prepareStatement(sql);
+						ps.setInt(1, dto.getGno());
+						int count = ps.executeUpdate();
+						if(count == 1) { return "등급 : " + dto.getGno() + "번 삭제 성공"; }
 					}
 				}
 			}
