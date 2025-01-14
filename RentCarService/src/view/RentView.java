@@ -99,46 +99,92 @@ public class RentView { // class start
  }
  
  // 견적 계산
- private void calculateEstimate(int gno) {
-     RentDto grade =  RentController.getInstance().getGradeInfo(gno);
-         
-     System.out.println("\n=== 계약 조건 입력 ===");
-     System.out.print("계약기간(개월): ");
-     int duration = scan.nextInt();
-     
-     // 보증금/선납금 선택 구조 수정
-     System.out.println("\n>> 보증금 / 선납금 선택");
-     System.out.print(">> 1.보증금 2.선납금 : ");
-     int paymentChoice = scan.nextInt();
-     
-     int deposit = 0;
-     int prepayment = 0;
-     
-     // 보증금 선택 시
-     if(paymentChoice == 1) {
-         System.out.print(">> 보증금 비율 선택 (1:0% 2:30% 3:50%) : ");
-         int depositChoice = scan.nextInt();
-         switch(depositChoice) {
-             case 1: deposit = 0; break;
-             case 2: deposit = 30; break;
-             case 3: deposit = 50; break;
-         }
-         System.out.println("보증금 " + deposit + "% 선택됨 (선납금 선택 불가)");
-         prepayment = 0;  // 선납금은 0으로 설정
-         
-     } 
-     // 선납금 선택 시
-     else if(paymentChoice == 2) {
-         System.out.print(">> 선납금 비율 선택 (1:0% 2:30% 3:50%) : ");
-         int prepaymentChoice = scan.nextInt();
-         switch(prepaymentChoice) {
-             case 1: prepayment = 0; break;
-             case 2: prepayment = 30; break;
-             case 3: prepayment = 50; break;
-         }
-         System.out.println("선납금 " + prepayment + "% 선택됨 (보증금 선택 불가)");
-         deposit = 0;  // 보증금은 0으로 설정
-     }
+	private void calculateEstimate(int gno) {
+	    RentDto grade = RentController.getInstance().getGradeInfo(gno);
+	         
+	    System.out.println("\n=== 계약 조건 입력 ===");
+	    
+	    // 계약기간 선택 수정
+	    int duration = 0;
+	    while(true) {
+	        System.out.println(">>>계약기간 선택");
+	        System.out.println("1. 36개월");
+	        System.out.println("2. 48개월");
+	        System.out.println("3. 60개월");
+	        System.out.print("선택> ");
+	        int choice = scan.nextInt();
+	        
+	        switch(choice) {
+	            case 1: duration = 36; break;
+	            case 2: duration = 48; break;
+	            case 3: duration = 60; break;
+	            default:
+	                System.out.println("잘못된 선택입니다. 1~3 중에서 선택해주세요.");
+	                continue;
+	        }
+	        break;  // 올바른 선택시 반복문 종료
+	    }
+	    System.out.println(duration + "개월이 선택되었습니다.");
+	     
+	    // 보증금/선납금 선택 구조도 같은 방식으로 수정
+	    System.out.println("\n>> 보증금 / 선납금 선택");
+	    int deposit = 0;
+	    int prepayment = 0;
+	    
+	    while(true) {
+	        System.out.println("1. 보증금");
+	        System.out.println("2. 선납금");
+	        System.out.print("선택> ");
+	        int paymentChoice = scan.nextInt();
+	        
+	        if(paymentChoice == 1) {
+	            while(true) {
+	                System.out.println(">> 보증금 비율 선택");
+	                System.out.println("1. 0%");
+	                System.out.println("2. 30%");
+	                System.out.println("3. 50%");
+	                System.out.print("선택> ");
+	                int depositChoice = scan.nextInt();
+	                
+	                switch(depositChoice) {
+	                    case 1: deposit = 0; break;
+	                    case 2: deposit = 30; break;
+	                    case 3: deposit = 50; break;
+	                    default:
+	                        System.out.println("잘못된 선택입니다. 1~3 중에서 선택해주세요.");
+	                        continue;
+	                }
+	                break;
+	            }
+	            prepayment = 0;  // 선납금은 0으로 설정
+	            break;
+	        } 
+	        else if(paymentChoice == 2) {
+	            while(true) {
+	                System.out.println(">> 선납금 비율 선택");
+	                System.out.println("1. 0%");
+	                System.out.println("2. 30%");
+	                System.out.println("3. 50%");
+	                System.out.print("선택> ");
+	                int prepaymentChoice = scan.nextInt();
+	                
+	                switch(prepaymentChoice) {
+	                    case 1: prepayment = 0; break;
+	                    case 2: prepayment = 30; break;
+	                    case 3: prepayment = 50; break;
+	                    default:
+	                        System.out.println("잘못된 선택입니다. 1~3 중에서 선택해주세요.");
+	                        continue;
+	                }
+	                break;
+	            }
+	            deposit = 0;  // 보증금은 0으로 설정
+	            break;
+	        }
+	        else {
+	            System.out.println("잘못된 선택입니다. 1 또는 2를 선택해주세요.");
+	        }
+	    }
       
      
      // 견적 계산 및 표시
@@ -163,17 +209,17 @@ public class RentView { // class start
      System.out.print("연락처: ");
      String phone = scan.nextLine();
      
-     System.out.print("계약유형(렌트): ");
-     int type = scan.nextInt();
+     System.out.print("계약유형(렌트)");
+     int type = 1;
      //보증금/선납금 선택 구조 수정
      System.out.println("\n>>보증금 또는 선납금 선택하십시오");
      System.out.print(">>1.보증금 2.선납금 : ");
      int paymenetChoice = scan.nextInt();
      
-     int deposit = 0;
-     int prepayment = 0;
+     int deposit = 0; 
+     int prepayment = 0;  
      
-     if(paymenetChoice ==1) {
+     if(paymenetChoice ==1) {   
     	 System.out.print(">>보증금 비율 선택(1:0% 2:30% 3:50%):");
     	 int depositChoice = scan.nextInt();
     	 switch(depositChoice) {
@@ -197,21 +243,38 @@ public class RentView { // class start
 
      
      
-     System.out.print("잔존가치(%): ");
-     int residualValue = scan.nextInt();
-     
-     System.out.print("계약기간(개월): ");
-     int duration = scan.nextInt();
-     
-     RentDto dto = new RentDto( );
-    		 
+     System.out.print(">>>잔존가치 비율 선택(1:30% 2:40% 3:50%): ");
+     int residualChoice = scan.nextInt();
+     int residualValue = 0;
+
+     // 잔존가치 선택에 따른 처리
+     switch(residualChoice) {
+        case 1: residualValue = 30; break;
+        case 2: residualValue = 40; break;
+        case 3: residualValue = 50; break;
+     }
+     System.out.println("잔존가치 " + residualValue + "% 선택됨");
+
+     System.out.print(">>>계약기간 선택(1:36개월 2:48개월 3:60개월): ");
+     int durationChoice = scan.nextInt();
+     int duration = 0;
+
+     // 계약기간 선택에 따른 처리
+     switch(durationChoice) {
+        case 1: duration = 36; break;
+        case 2: duration = 48; break;
+        case 3: duration = 60; break;
+     }
+     System.out.println("계약기간 " + duration + "개월 선택됨");
+
+     RentDto dto = new RentDto();
      dto.setAname(name);
      dto.setAphone(phone);
      dto.setAtype(type);
      dto.setDeposit(deposit);
      dto.setPrepayments(prepayment);
-     dto.setResidualValue(residualValue);
-     dto.setDuration(duration);
+     dto.setResidualValue(residualValue);  // 선택된 잔존가치 설정
+     dto.setDuration(duration);            // 선택된 계약기간 설정
     		
     
      
@@ -220,8 +283,19 @@ public class RentView { // class start
          
      if(result) {
          System.out.println("계약 신청이 완료되었습니다!");
-     } else {
-         System.out.println("계약 신청에 실패했습니다.");
+         
+         
+         System.out.println("\n=== 신청 내용 확인 ===");
+         System.out.println("신청자명:" + dto.getAname());
+         System.out.println("연락처:" + dto.getAphone());
+         System.out.println("계약유형:" +(dto.getAtype()==1?"렌트" : "리스"));
+         System.out.println("보증금:" + dto.getDeposit()+ "%");
+         System.out.println("선납금:" + dto.getPrepayments()+"%");
+         System.out.println("잔존가치" + dto.getResidualValue()+"%");
+         System.out.println("계약기간:" + dto.getDuration()+"개월");
+     }else {
+    	 System.out.println("계약 신청에 실패했습니다.");
+    	 System.out.println("다시 시도해주세요");
      }
  }
 }//class end

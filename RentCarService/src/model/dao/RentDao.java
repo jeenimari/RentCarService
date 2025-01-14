@@ -145,4 +145,41 @@ public class RentDao extends Dao {
 	       }
 	       return null;
 	   }
+	   //신청 저장 메소드 추가
+	   public boolean registerApplication1(RentDto dto) {
+		   try {
+			   String sql ="INSERT INTO apply (aname, aphone, atype, deposit, prepayments, residual_value, duration) VALUES (?, ?, ?, ?, ?, ?, ?)";
+			   PreparedStatement ps = conn.prepareStatement(sql);
+			   
+			   //매개변수 파라미터 설정
+			   ps.setString(1, dto.getAname());
+			   ps.setString(2, dto.getAphone());
+			   ps.setInt(3, dto.getAtype());
+		       ps.setInt(4, dto.getDeposit());
+		       ps.setInt(5, dto.getPrepayments());
+		       ps.setInt(6, dto.getResidualValue());
+		       ps.setInt(7, dto.getDuration());
+		       
+		       //SQL 실행 및 결과 확인
+		       return ps.executeUpdate() == 1;
+		   }catch (SQLException e) {
+			   System.out.println("신청 등록 오류입니다." + e);
+			// TODO: handle exception
+		}
+		   return false;
+		   
+	   }// f end
+	   
+	  
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
 }// c end 
