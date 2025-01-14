@@ -337,7 +337,43 @@ public class LeaseDao extends Dao {
   }
 
   public LeaseDto getGradeInfo(int gno) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getGradeInfo'");
+    LeaseDto dto = null;
+    String sql = "SELECT g.gno, g.gname, g.gprice, m.mname, b.bname, c.cname "
+        + "FROM grade g "
+        + "JOIN model m ON g.mno = m.mno "
+        + "JOIN brand b ON m.bno = b.bno "
+        + "JOIN category c ON b.cno = c.cno "
+        + "WHERE g.gno = ?";
+
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, gno);
+      rs = ps.executeQuery();
+
+      if (rs.next()) {
+        dto = new LeaseDto();
+        dto.setGno(rs.getInt("gno"));
+        dto.setGname(rs.getString("gname"));
+        dto.setGprice(rs.getInt("gprice"));
+        dto.setMname(rs.getString("mname"));
+        dto.setBname(rs.getString("bname"));
+        dto.setCname(rs.getString("cname"));
+      }
+    } catch (SQLException e) {
+      System.out.println("[오류] 등급 정보 조회 실패: " + e.getMessage());
+    } finally {
+      try {
+        if (rs != null)
+          rs.close();
+        if (ps != null)
+          ps.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+    return dto;
   }
 } // class end
