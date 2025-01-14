@@ -11,63 +11,73 @@ import model.dto.LeaseDto;
  * [설명] 리스 관련 데이터베이스 작업을 처리하는 DAO(Data Access Object) 클래스
  * 
  * [주요 기능]
- * 1. 차량 정보 조회 (카테고리, 브랜드 목록)
+ * 1. 차량 정보 조회 (카테고리, 브랜드, 모델, 등급)
  * 2. 리스 신청 처리 (등록, 조회, 상태 변경)
  * 3. 데이터베이스 CRUD 작업 수행
  * 
- * [테이블 구조]
- * 1. apply 테이블
- * - ano: 신청번호 (PK, auto_increment)
+ * [데이터베이스 구조]
+ * 1. car 테이블: 차량 카테고리 정보 (국산차/수입차)
+ * - cno(PK): 카테고리 번호
+ * - cname: 카테고리명
+ * 
+ * 2. brand 테이블: 브랜드 정보
+ * - bno(PK): 브랜드 번호
+ * - bname: 브랜드명
+ * - cno(FK): 카테고리 번호
+ * 
+ * 3. model 테이블: 차량 모델 정보
+ * - mno(PK): 모델 번호
+ * - mname: 모델명
+ * - bno(FK): 브랜드 번호
+ * 
+ * 4. grade 테이블: 차량 등급 정보
+ * - gno(PK): 등급 번호
+ * - gname: 등급명
+ * - gprice: 차량 가격
+ * - mno(FK): 모델 번호
+ * 
+ * 5. apply 테이블: 리스/렌트 신청 정보
+ * - ano(PK): 신청번호 (auto_increment)
  * - aname: 신청자 이름
  * - aphone: 연락처 (형식: 000-0000-0000)
- * - atype: 신청종류 (0:렌트, 1:리스)
- * - deposit: 보증금
- * - prepayments: 선납금
- * - residual_value: 잔존가치
+ * - atype: 신청종류 (1:렌트, 2:리스)
+ * - deposit: 보증금 비율(%)
+ * - prepayments: 선납금 비율(%)
+ * - residual_value: 잔존가치 비율(%)
  * - duration: 계약기간(월)
- * - gno: 차량등급번호 (FK)
- * - monthly_pay: 월납입금
- * - apply_date: 신청일자
- * - status: 신청상태 (0:대기중, 1:승인, 2:거절)
  * 
- * 2. car 테이블: 차량 카테고리 정보
- * 3. brand 테이블: 브랜드 정보
+ * [코드 작성 순서]
+ * 1. 싱글톤 패턴 구현 (인스턴스 생성 및 반환)
+ * 2. 차량 정보 조회 메소드 구현 (카테고리 → 브랜드 → 모델 → 등급)
+ * 3. 리스 신청 처리 메소드 구현 (등록, 조회, 상태 변경)
+ * 4. 예외 처리 및 리소스 관리
  */
 public class LeaseDao extends Dao {
 
   /**
-   * [필드] 싱글톤 인스턴스
-   * - 데이터베이스 연결의 효율적 관리를 위한 싱글톤 패턴 구현
+   * [싱글톤 패턴 구현]
    */
   private static LeaseDao instance = new LeaseDao();
 
-  /**
-   * [생성자] private 생성자
-   * - 싱글톤 패턴 구현을 위해 private으로 선언
-   * - 부모 클래스(Dao)의 생성자를 호출하여 DB 연결 초기화
-   */
   private LeaseDao() {
-    super(); // DB 연결 초기화
+    super(); // 부모 클래스(Dao)의 생성자 호출하여 DB 연결 초기화
   }
 
-  /**
-   * [메소드] getInstance
-   * - 싱글톤 인스턴스 반환 메소드
-   * 
-   * @return LeaseDao 싱글톤 인스턴스
-   */
   public static LeaseDao getInstance() {
     return instance;
   }
 
   /**
    * [메소드] getCategoryList
-   * - 차량 카테고리 목록 조회
+   * [설명] 차량 카테고리(국산차/수입차) 목록 조회
    * 
-   * [처리내용]
+   * [처리 순서]
    * 1. car 테이블의 모든 카테고리 정보 조회
-   * 2. 카테고리 번호(cno)와 이름(cname) 매핑
-   * 3. LeaseDto 객체로 변환하여 목록 반환
+   * 2. ResultSet에서 데이터 추출하여 DTO 객체 생성
+   * 3. ArrayList에 DTO 객체 추가하여 반환
+   * 
+   * [예외 처리]
+   * - SQLException: DB 조회 실패 시 빈 ArrayList 반환
    * 
    * @return ArrayList<LeaseDto> 카테고리 목록
    */
@@ -80,8 +90,8 @@ public class LeaseDao extends Dao {
 
       while (rs.next()) {
         LeaseDto dto = new LeaseDto();
-        dto.setCno(rs.getInt("cno"));
-        dto.setCname(rs.getString("cname"));
+        dto.setCno(rs.getInt("cno")); // 카테고리 번호 설정
+        dto.setCname(rs.getString("cname")); // 카테고리명 설정
         list.add(dto);
       }
     } catch (SQLException e) {
@@ -92,43 +102,44 @@ public class LeaseDao extends Dao {
 
   /**
    * [메소드] registerApplication
-   * - 신규 리스 신청 정보 등록
+   * [설명] 신규 리스 신청 정보 등록
    * 
-   * [처리내용]
-   * 1. 신청자 정보 및 계약 조건 저장
-   * 2. 신청 상태는 기본값 0(대기중)으로 설정
-   * 3. 신청일자는 현재 시간(NOW())으로 자동 설정
+   * [처리 순서]
+   * 1. 입력받은 DTO 객체의 데이터 검증
+   * 2. apply 테이블에 신청 정보 저장
+   * 3. 등록 결과 반환 (성공: true, 실패: false)
    * 
-   * [입력 데이터]
-   * - aname: 신청자 이름 (필수)
-   * - aphone: 연락처 (필수, 형식 검증)
-   * - atype: 신청종류 (0:렌트, 1:리스)
-   * - deposit: 보증금
-   * - prepayments: 선납금
-   * - residual_value: 잔존가치
-   * - duration: 계약기간
-   * - gno: 차량등급번호
-   * - monthly_pay: 월납입금
+   * [입력 데이터 검증]
+   * - 이름: 필수 입력
+   * - 연락처: 000-0000-0000 형식
+   * - 계약유형: 1(렌트) 또는 2(리스)
+   * - 보증금/선납금: 0~50% 범위
+   * - 잔존가치: 30~50% 범위
+   * - 계약기간: 36/48/60개월
    * 
-   * @param dto 리스 신청 정보가 담긴 DTO
+   * [리소스 관리]
+   * - try-with-resources 사용하여 자동 리소스 해제
+   * 
+   * @param dto 리스 신청 정보가 담긴 DTO 객체
    * @return boolean 등록 성공 여부
    */
   public boolean registerApplication(LeaseDto dto) {
+    // SQL 쿼리 작성 (필수 필드만 포함)
     String sql = "INSERT INTO apply (aname, aphone, atype, deposit, prepayments, " +
-        "residual_value, duration, gno, monthly_pay, apply_date, status) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), 0)";
+        "residual_value, duration) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
-      ps.setString(1, dto.getAname());
-      ps.setString(2, dto.getAphone());
-      ps.setInt(3, dto.getAtype());
-      ps.setInt(4, dto.getDeposit());
-      ps.setInt(5, dto.getPrepayments());
-      ps.setInt(6, dto.getResidual_value());
-      ps.setInt(7, dto.getDuration());
-      ps.setInt(8, dto.getGno());
-      ps.setInt(9, dto.getMonthlyPay());
+      // 파라미터 바인딩
+      ps.setString(1, dto.getAname()); // 신청자 이름
+      ps.setString(2, dto.getAphone()); // 연락처
+      ps.setInt(3, dto.getAtype()); // 계약유형(1:렌트, 2:리스)
+      ps.setInt(4, dto.getDeposit()); // 보증금 비율
+      ps.setInt(5, dto.getPrepayments()); // 선납금 비율
+      ps.setInt(6, dto.getResidual_value()); // 잔존가치 비율
+      ps.setInt(7, dto.getDuration()); // 계약기간
 
+      // 실행 및 결과 반환 (영향받은 행이 1개면 성공)
       return ps.executeUpdate() == 1;
     } catch (SQLException e) {
       System.out.println("[오류] 리스 신청 등록 실패: " + e.getMessage());
@@ -216,19 +227,19 @@ public class LeaseDao extends Dao {
 
   /**
    * [메소드] getBrandList
-   * - 특정 카테고리의 브랜드 목록 조회
+   * [설명] 특정 카테고리에 속한 브랜드 목록 조회
    * 
-   * [처리내용]
-   * 1. 카테고리 번호(cno)로 해당 카테고리의 브랜드 조회
-   * 2. 브랜드 정보(bno, bname) 매핑
-   * 3. LeaseDto 객체로 변환하여 목록 반환
+   * [처리 순서]
+   * 1. 입력받은 카테고리 번호로 브랜드 테이블 조회
+   * 2. ResultSet에서 브랜드 정보 추출하여 DTO 객체 생성
+   * 3. ArrayList에 DTO 객체 추가하여 반환
    * 
-   * [조회 조건]
-   * - cno: 카테고리 번호 (car 테이블의 PK)
+   * [조인 관계]
+   * - brand 테이블과 car 테이블이 cno로 연결
    * 
-   * [조회 항목]
-   * - bno: 브랜드 번호
-   * - bname: 브랜드 이름
+   * [예외 처리]
+   * - SQLException: DB 조회 실패 시 빈 ArrayList 반환
+   * - 잘못된 카테고리 번호: 빈 ArrayList 반환
    * 
    * @param cno 조회할 카테고리 번호
    * @return ArrayList<LeaseDto> 브랜드 목록
@@ -238,13 +249,13 @@ public class LeaseDao extends Dao {
     String sql = "SELECT * FROM brand WHERE cno = ?";
 
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
-      ps.setInt(1, cno);
+      ps.setInt(1, cno); // 카테고리 번호 바인딩
 
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           LeaseDto dto = new LeaseDto();
-          dto.setBno(rs.getInt("bno"));
-          dto.setBname(rs.getString("bname"));
+          dto.setBno(rs.getInt("bno")); // 브랜드 번호
+          dto.setBname(rs.getString("bname")); // 브랜드명
           list.add(dto);
         }
       }
@@ -256,19 +267,19 @@ public class LeaseDao extends Dao {
 
   /**
    * [메소드] getModelList
-   * - 특정 브랜드의 차량 모델 목록 조회
+   * [설명] 특정 브랜드의 차량 모델 목록 조회
    * 
-   * [처리내용]
-   * 1. 브랜드 번호(bno)로 해당 브랜드의 모델 조회
-   * 2. 모델 정보(mno, mname) 매핑
-   * 3. LeaseDto 객체로 변환하여 목록 반환
+   * [처리 순서]
+   * 1. 입력받은 브랜드 번호로 모델 테이블 조회
+   * 2. ResultSet에서 모델 정보 추출하여 DTO 객체 생성
+   * 3. ArrayList에 DTO 객체 추가하여 반환
    * 
-   * [조회 조건]
-   * - bno: 브랜드 번호 (brand 테이블의 PK)
+   * [조인 관계]
+   * - model 테이블과 brand 테이블이 bno로 연결
    * 
-   * [조회 항목]
-   * - mno: 모델 번호
-   * - mname: 모델 이름
+   * [예외 처리]
+   * - SQLException: DB 조회 실패 시 빈 ArrayList 반환
+   * - 잘못된 브랜드 번호: 빈 ArrayList 반환
    * 
    * @param bno 조회할 브랜드 번호
    * @return ArrayList<LeaseDto> 모델 목록
@@ -278,13 +289,13 @@ public class LeaseDao extends Dao {
     String sql = "SELECT * FROM model WHERE bno = ?";
 
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
-      ps.setInt(1, bno);
+      ps.setInt(1, bno); // 브랜드 번호 바인딩
 
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           LeaseDto dto = new LeaseDto();
-          dto.setMno(rs.getInt("mno"));
-          dto.setMname(rs.getString("mname"));
+          dto.setMno(rs.getInt("mno")); // 모델 번호
+          dto.setMname(rs.getString("mname")); // 모델명
           list.add(dto);
         }
       }
@@ -296,20 +307,19 @@ public class LeaseDao extends Dao {
 
   /**
    * [메소드] getGradeList
-   * - 특정 모델의 등급 목록 조회
+   * [설명] 특정 모델의 등급 목록 조회
    * 
-   * [처리내용]
-   * 1. 모델 번호(mno)로 해당 모델의 등급 정보 조회
-   * 2. 등급 정보(gno, gname, price) 매핑
-   * 3. LeaseDto 객체로 변환하여 목록 반환
+   * [처리 순서]
+   * 1. 입력받은 모델 번호로 등급 테이블 조회
+   * 2. ResultSet에서 등급 정보 추출하여 DTO 객체 생성
+   * 3. ArrayList에 DTO 객체 추가하여 반환
    * 
-   * [조회 조건]
-   * - mno: 모델 번호 (model 테이블의 PK)
+   * [조인 관계]
+   * - grade 테이블과 model 테이블이 mno로 연결
    * 
-   * [조회 항목]
-   * - gno: 등급 번호
-   * - gname: 등급 이름
-   * - price: 차량 가격
+   * [예외 처리]
+   * - SQLException: DB 조회 실패 시 빈 ArrayList 반환
+   * - 잘못된 모델 번호: 빈 ArrayList 반환
    * 
    * @param mno 조회할 모델 번호
    * @return ArrayList<LeaseDto> 등급 목록
@@ -319,14 +329,14 @@ public class LeaseDao extends Dao {
     String sql = "SELECT * FROM grade WHERE mno = ?";
 
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
-      ps.setInt(1, mno);
+      ps.setInt(1, mno); // 모델 번호 바인딩
 
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           LeaseDto dto = new LeaseDto();
-          dto.setGno(rs.getInt("gno"));
-          dto.setGname(rs.getString("gname"));
-          dto.setGprice(rs.getInt("gprice"));
+          dto.setGno(rs.getInt("gno")); // 등급 번호
+          dto.setGname(rs.getString("gname")); // 등급명
+          dto.setGprice(rs.getInt("gprice")); // 차량 가격
           list.add(dto);
         }
       }
@@ -336,44 +346,60 @@ public class LeaseDao extends Dao {
     return list;
   }
 
+  /**
+   * [메소드] getGradeInfo
+   * [설명] 특정 등급의 상세 정보 조회 (차량 전체 정보 포함)
+   * 
+   * [처리 순서]
+   * 1. 입력받은 등급 번호로 전체 차량 정보 조회
+   * 2. 4개 테이블 JOIN하여 차량의 모든 정보 조회
+   * 3. ResultSet에서 데이터 추출하여 단일 DTO 객체 생성
+   * 
+   * [조인 관계]
+   * - car ← brand ← model ← grade
+   * - 각 테이블이 FK로 연결됨
+   * 
+   * [예외 처리]
+   * - SQLException: DB 조회 실패 시 null 반환
+   * - 잘못된 등급 번호: null 반환
+   * 
+   * @param gno 조회할 등급 번호
+   * @return LeaseDto 차량 상세 정보 (조회 실패 시 null)
+   */
   public LeaseDto getGradeInfo(int gno) {
-    LeaseDto dto = null;
-    String sql = "SELECT g.gno, g.gname, g.gprice, m.mname, b.bname, c.cname "
-        + "FROM grade g "
-        + "JOIN model m ON g.mno = m.mno "
-        + "JOIN brand b ON m.bno = b.bno "
-        + "JOIN category c ON b.cno = c.cno "
-        + "WHERE g.gno = ?";
+    // 4개 테이블 JOIN 쿼리
+    String sql = "SELECT c.cno, c.cname, b.bno, b.bname, m.mno, m.mname, g.gno, g.gname, g.gprice " +
+        "FROM car c " +
+        "INNER JOIN brand b ON c.cno = b.cno " +
+        "INNER JOIN model m ON b.bno = m.bno " +
+        "INNER JOIN grade g ON m.mno = g.mno " +
+        "WHERE g.gno = ?";
 
-    PreparedStatement ps = null;
-    ResultSet rs = null;
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+      ps.setInt(1, gno); // 등급 번호 바인딩
 
-    try {
-      ps = conn.prepareStatement(sql);
-      ps.setInt(1, gno);
-      rs = ps.executeQuery();
-
-      if (rs.next()) {
-        dto = new LeaseDto();
-        dto.setGno(rs.getInt("gno"));
-        dto.setGname(rs.getString("gname"));
-        dto.setGprice(rs.getInt("gprice"));
-        dto.setMname(rs.getString("mname"));
-        dto.setBname(rs.getString("bname"));
-        dto.setCname(rs.getString("cname"));
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          LeaseDto dto = new LeaseDto();
+          // 카테고리 정보
+          dto.setCno(rs.getInt("cno"));
+          dto.setCname(rs.getString("cname"));
+          // 브랜드 정보
+          dto.setBno(rs.getInt("bno"));
+          dto.setBname(rs.getString("bname"));
+          // 모델 정보
+          dto.setMno(rs.getInt("mno"));
+          dto.setMname(rs.getString("mname"));
+          // 등급 정보
+          dto.setGno(rs.getInt("gno"));
+          dto.setGname(rs.getString("gname"));
+          dto.setGprice(rs.getInt("gprice"));
+          return dto;
+        }
       }
     } catch (SQLException e) {
       System.out.println("[오류] 등급 정보 조회 실패: " + e.getMessage());
-    } finally {
-      try {
-        if (rs != null)
-          rs.close();
-        if (ps != null)
-          ps.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
     }
-    return dto;
+    return null;
   }
 } // class end
