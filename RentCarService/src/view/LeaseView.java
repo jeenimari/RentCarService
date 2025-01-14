@@ -239,6 +239,6 @@ public class LeaseView {
     } else {
       System.out.println("계약 신청에 실패했습니다.");
     }
-  }
+  } // applyContract end
 
 } // class end
