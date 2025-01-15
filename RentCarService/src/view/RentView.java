@@ -25,7 +25,7 @@ public class RentView { // class start
          System.out.println("\n=== 렌트카 견적 시스템 ===");
          System.out.println("1. 견적 확인하기");
          System.out.println("2. 계약 신청하기");
-         System.out.println("3. 종료");
+         System.out.println("3. 뒤로가기");
          System.out.print("선택> ");
          
          int choice = scan.nextInt();
@@ -236,7 +236,7 @@ public class RentView { // class start
     	 	case 1: prepayment = 0; break;
     	 	case 2: prepayment = 30; break;
     	 	case 3: prepayment = 50; break;
-    	 }
+    	 }//switch end
     	 System.out.println("선납금" + prepayment + "% 선택됨(보증금 선택 불가)");
     	 deposit = 0;   //보증금 0으로 설정
      }
