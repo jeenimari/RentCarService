@@ -48,7 +48,7 @@ public class AdminDao extends Dao {
 	public boolean addCar(Dto dto) {
 		boolean cstate = false; boolean bstate = false;
 		boolean mstate = false; boolean gstate = false;
-		int ccount = 0, bcount = 0, mcount = 0, gcount = 0;
+		int cnum = 0, bnum = 0, mnum = 0, gnum = 0;
 		try {
 			String sql = "select * from car;";
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -57,7 +57,7 @@ public class AdminDao extends Dao {
 				if(dto.getCname().equals(rs.getString("cname"))) {
 					cstate = true;
 				}
-				ccount++;
+				cnum = rs.getInt("cno");
 			}
 			sql = "select * from brand;";
 			ps = conn.prepareStatement(sql);
@@ -66,7 +66,7 @@ public class AdminDao extends Dao {
 				if(dto.getBname().equals(rs.getString("bname"))) {
 					bstate = true;
 				}
-				bcount++;
+				bnum = rs.getInt("bno");
 			}
 			sql = "select * from model;";
 			ps = conn.prepareStatement(sql);
@@ -75,7 +75,7 @@ public class AdminDao extends Dao {
 				if(dto.getMname().equals(rs.getString("mname"))) {
 					mstate = true;
 				}
-				mcount++;
+				mnum = rs.getInt("mno");
 			}
 			sql = "select * from grade;";
 			ps = conn.prepareStatement(sql);
@@ -84,7 +84,7 @@ public class AdminDao extends Dao {
 				if(dto.getGname().equals(rs.getString("gname")) && dto.getMno() == rs.getInt("mno")) {
 					gstate = true;
 				}
-				gcount++;
+				gnum = rs.getInt("gno");
 			}
 			if(cstate == false) {
 				sql = "insert into car(cname) values (?);";
@@ -96,21 +96,21 @@ public class AdminDao extends Dao {
 			if(bstate == false) {
 				sql = "insert into brand(bno, bname, cno) values (?, ?, ?);";
 				ps = conn.prepareStatement(sql);
-				ps.setInt(1, ++bcount); ps.setString(2, dto.getBname()); ps.setInt(3, dto.getCno());
+				ps.setInt(1, ++bnum); ps.setString(2, dto.getBname()); ps.setInt(3, dto.getCno());
 				int count = ps.executeUpdate();
 				if(count == 1) { bstate = true; }
 			}
 			if(mstate == false) {
 				sql = "insert into model(mno, mname, bno) values (?, ?, ?);";
 				ps = conn.prepareStatement(sql);
-				ps.setInt(1, ++mcount); ps.setString(2, dto.getMname()); ps.setInt(3, dto.getBno());
+				ps.setInt(1, ++mnum); ps.setString(2, dto.getMname()); ps.setInt(3, dto.getBno());
 				int count = ps.executeUpdate();
 				if(count == 1) { mstate = true; }
 			}
 			if(gstate == false) {
 				sql = "insert into grade(gno, gname, gprice, mno) values (?, ?, ?, ?);";
 				ps = conn.prepareStatement(sql);
-				ps.setInt(1, ++gcount); ps.setString(2, dto.getGname()); 
+				ps.setInt(1, ++gnum); ps.setString(2, dto.getGname()); 
 				ps.setInt(3, dto.getGprice()); ps.setInt(4, dto.getMno());
 				int count = ps.executeUpdate();
 				if(count == 1) { gstate = true; }
@@ -180,12 +180,10 @@ public class AdminDao extends Dao {
 	/** 4. 차량수정 화면 처리 메소드 */
 	public boolean updateCar(Dto dto) {
 		String sql = "select * from " + dto.getTname() + ";";
-		PreparedStatement ps;
-		ResultSet rs;
 		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
 			if(dto.getTname().equals("brand")) {
-				ps = conn.prepareStatement(sql);
-				rs = ps.executeQuery();
 				while(rs.next()) {
 					if(dto.getBno() == rs.getInt("bno")) {
 						sql = "update brand set bname = ? where bno = ?;";
@@ -197,9 +195,7 @@ public class AdminDao extends Dao {
 					}
 				}
 			}
-			if(dto.getTname().equals("model")) {
-				ps = conn.prepareStatement(sql);
-				rs = ps.executeQuery();
+			else if(dto.getTname().equals("model")) {
 				while(rs.next()) {
 					if(dto.getMno() == rs.getInt("mno")) {
 						sql = "update model set mname = ? where mno = ?;";
@@ -211,9 +207,7 @@ public class AdminDao extends Dao {
 					}
 				}
 			}
-			if(dto.getTname().equals("grade")) {
-				ps = conn.prepareStatement(sql);
-				rs = ps.executeQuery();
+			else if(dto.getTname().equals("grade")) {
 				while(rs.next()) {
 					if(dto.getGno() == rs.getInt("gno")) {
 						sql = "update grade set gname = ?, gprice = ? where gno = ?;";
@@ -235,12 +229,10 @@ public class AdminDao extends Dao {
 	/** 5. 차량삭제 화면 처리 메소드 */
 	public String deleteCar(Dto dto) {
 		String sql = "select * from " + dto.getTname() + ";";
-		PreparedStatement ps;
-		ResultSet rs;
 		try {			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
 			if(dto.getTname().equals("brand")) {
-				ps = conn.prepareStatement(sql);
-				rs = ps.executeQuery();
 				while(rs.next()) {
 					if(dto.getBno() == rs.getInt("bno")) {
 						sql = "delete from brand where bno = ?;";
@@ -251,9 +243,7 @@ public class AdminDao extends Dao {
 					}
 				}
 			}
-			if(dto.getTname().equals("model")) {
-				ps = conn.prepareStatement(sql);
-				rs = ps.executeQuery();
+			else if(dto.getTname().equals("model")) {
 				while(rs.next()) {
 					if(dto.getMno() == rs.getInt("mno")) {
 						sql = "delete from model where mno = ?;";
@@ -264,9 +254,7 @@ public class AdminDao extends Dao {
 					}
 				}
 			}
-			if(dto.getTname().equals("grade")) {
-				ps = conn.prepareStatement(sql);
-				rs = ps.executeQuery();
+			else if(dto.getTname().equals("grade")) {
 				while(rs.next()) {
 					if(dto.getGno() == rs.getInt("gno")) {
 						sql = "delete from grade where gno = ?;";
@@ -282,5 +270,7 @@ public class AdminDao extends Dao {
 		}
 		return null;
 	}
+	
+	
 	
 }
