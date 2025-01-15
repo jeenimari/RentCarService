@@ -1,6 +1,0 @@
-# Markdown files
-*.md
-!README.md  # README.md만 예외적으로 추적하고 싶은 경우
-
-# 특정 markdown 파일만 제외하고 싶은 경우
-LeaseControllerAPI.md 

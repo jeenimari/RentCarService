@@ -1,2 +1,21 @@
+# 컴파일된 클래스 파일
 /bin/
-README.md
+
+# Markdown files
+*.md
+!README.md  # README.md만 예외적으로 추적
+
+# 특정 markdown 파일만 제외
+LeaseControllerAPI.md
+LeaseSystemTest.md
+
+# Git 관련
+.gitignore
+
+# Eclipse IDE 설정 파일
+.project
+.classpath
+.settings/
+
+# 애플 폴더
+.DS_Store
