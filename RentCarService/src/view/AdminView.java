@@ -59,46 +59,17 @@ public class AdminView {
 	
 	/** 2. 차량등록 화면 메소드 */
 	public void addCar() {
+		int choose = 0;
 		System.out.println("======== 차량등록 ========");
-		System.out.println("======== 카테고리 ========");
-		System.out.println("카테고리\t    카테고리\n 번호");
-		System.out.println("----------------------");
-		select("car");
-		System.out.println("----------------------");
-		System.out.println("카테고리\t    카테고리\n 번호");
-		System.out.println("======== 카테고리 ========");
+		infoPrint(choose++, "등록");
 		System.out.print(">> 국산차 / 수입차 (문자 입력) : "); String cname = scan.next();
-		System.out.println("======== 브랜드 ========");
-		System.out.println("브랜드        브랜드         카테고리");
-		System.out.println(" 번호                       번호");
-		System.out.println("-------------------------------");
-		select("brand");
-		System.out.println("-------------------------------");
-		System.out.println("브랜드        브랜드         카테고리");
-		System.out.println(" 번호                       번호");
-		System.out.println("======== 브랜드 ========");
+		infoPrint(choose++, "등록");
 		System.out.print(">> 브랜드 : "); String bname = scan.next();
 		System.out.print(">> 카테고리 번호 : "); int cno = scan.nextInt();
-		System.out.println("======== 모델 ========");
-		System.out.println(" 모델         모 델         브랜드");
-		System.out.println(" 번호                       번호");
-		System.out.println("-------------------------------");
-		select("model");
-		System.out.println("-------------------------------");
-		System.out.println(" 모델         모 델         브랜드");
-		System.out.println(" 번호                       번호");
-		System.out.println("======== 모델 ========");
+		infoPrint(choose++, "등록");
 		System.out.print(">> 모델 : "); String mname = scan.next();
 		System.out.print(">> 브랜드 번호 : "); int bno = scan.nextInt();
-		System.out.println("======== 등급 ========");
-		System.out.println(" 등급          등 급                  가 격\t\t   모델");
-		System.out.println(" 번호                                    \t\t   번호");
-		System.out.println("---------------------------------------------------------------");
-		select("grade");
-		System.out.println("---------------------------------------------------------------");
-		System.out.println(" 등급          등 급                  가 격\t\t   모델");
-		System.out.println(" 번호                                    \t\t   번호");
-		System.out.println("======== 등급 ========");
+		infoPrint(choose++, "등록");
 		System.out.print(">> 등급 : "); String gname = scan.next();
 		System.out.print(">> 가격 : "); int gprice = scan.nextInt();
 		System.out.print(">> 모델 번호 : "); int mno = scan.nextInt();
@@ -122,7 +93,8 @@ public class AdminView {
 			} else if(tableName.equals("model")) {
 				System.out.printf("  %-10d%-6s\t%5d\n", dto.getMno(), dto.getMname(), dto.getBno());
 			} else if(tableName.equals("grade")) {
-				System.out.printf("  %-10d %-10s    \t%10d\t   %10d\n", dto.getGno(), dto.getGname(), dto.getGprice(), dto.getMno());
+				System.out.printf("  %-10d %-10s    \t%10s\t   %10d\n", dto.getGno(), dto.getGname(), 
+						String.format("%,d", dto.getGprice()), dto.getMno());
 			}
 		}
 	}
@@ -137,9 +109,9 @@ public class AdminView {
 				+ "---------------------------");
 		for(int index = 0; index < result.size(); index++) {
 			Dto dto = result.get(index);
-			System.out.printf("  %d\t %s\t    %d    %-7s\t %-5d %-10s\t %-5d\t   %-5s\t%15d\n",
+			System.out.printf("  %d\t %s\t    %d    %-7s\t %-5d %-10s\t %-5d\t   %-5s\t%15s\n",
 					dto.getCno(), dto.getCname(), dto.getBno(), dto.getBname(), dto.getMno(), dto.getMname(), 
-					dto.getGno(), dto.getGname(), dto.getGprice());
+					dto.getGno(), dto.getGname(), String.format("%,d", dto.getGprice()));
 		}
 		System.out.println("------------------------------------------------------------------------------"
 				+ "---------------------------");
@@ -151,135 +123,119 @@ public class AdminView {
 	/** 4. 차량수정 화면 메소드 */
 	public void updateCar() {
 		System.out.println("======== 차량수정 ========");
-		while(true) {			
+		while(true) {
+			Dto dto = new Dto();
+			boolean result = false;
+			String name = null;
 			System.out.print(">> 1. 브랜드 2.모델 3.등급 4. 뒤로가기 : ");
 			int choose = scan.nextInt();
+			infoPrint(choose, "수정");
 			if(choose == 1) {
-				System.out.println("======== 브랜드 ========");
-				System.out.println("브랜드        브랜드         카테고리");
-				System.out.println(" 번호                       번호");
-				System.out.println("-------------------------------");
-				select("brand");
-				System.out.println("-------------------------------");
-				System.out.println("브랜드        브랜드         카테고리");
-				System.out.println(" 번호                       번호");
-				System.out.println("======== 브랜드 ========");
+				name = "brand";
 				System.out.print(">> 브랜드 번호 : "); int bno = scan.nextInt();
 				System.out.print(">> 수정 후 브랜드 : "); String bname = scan.next();
-				Dto dto = new Dto(); dto.setBno(bno); dto.setBname(bname); dto.setTname("brand");
-				boolean result = AdminController.getInstance().updateCar(dto);
-				if(result) { System.out.println(">> 브랜드 수정 성공"); } else { System.out.println(">> 브랜드 수정 실패"); }
-				
+				dto = new Dto(); dto.setBno(bno); dto.setBname(bname); dto.setTname(name);
 			}
 			else if(choose == 2) {
-				System.out.println("======== 모델 ========");
-				System.out.println(" 모델         모 델         브랜드");
-				System.out.println(" 번호                       번호");
-				System.out.println("-------------------------------");
-				select("model");
-				System.out.println("-------------------------------");
-				System.out.println(" 모델         모 델         브랜드");
-				System.out.println(" 번호                       번호");
-				System.out.println("======== 모델 ========");
+				name = "model";
 				System.out.print(">> 모델 번호 : "); int mno = scan.nextInt();
 				System.out.print(">> 새로운 모델 : "); String mname = scan.next();
-				Dto dto = new Dto(); dto.setMname(mname); dto.setMno(mno); dto.setTname("model");
-				boolean result = AdminController.getInstance().updateCar(dto);
-				if(result) { System.out.println(">> 모델 수정 성공"); } else { System.out.println(">> 모델 수정 실패"); }
+				dto = new Dto(); dto.setMname(mname); dto.setMno(mno); dto.setTname(name);
 			}
 			else if(choose == 3) {
-				System.out.println("======== 등급 ========");
-				System.out.println(" 등급          등 급                  가 격\t\t   모델");
-				System.out.println(" 번호                                    \t\t   번호");
-				System.out.println("---------------------------------------------------------------");
-				select("grade");
-				System.out.println("---------------------------------------------------------------");
-				System.out.println(" 등급          등 급                  가 격\t\t   모델");
-				System.out.println(" 번호                                    \t\t   번호");
-				System.out.println("======== 등급 ========");
+				name = "grade";
 				System.out.print(">> 수정할 등급 번호 : "); int gno = scan.nextInt();
 				System.out.print(">> 새로운 등급 : "); String gname = scan.next();
 				System.out.print(">> 새로운 가격 : "); int gprice = scan.nextInt();
-				Dto dto = new Dto();
-				dto.setGno(gno); dto.setGname(gname); dto.setGprice(gprice); dto.setTname("grade");
-				boolean result = AdminController.getInstance().updateCar(dto);
-				if(result) { System.out.println(">> 등급 수정 성공"); } else { System.out.println(">> 등급 수정 실패"); }
+				dto = new Dto();
+				dto.setGno(gno); dto.setGname(gname); dto.setGprice(gprice); dto.setTname(name);
 			}
 			else if(choose == 4) { System.out.println(">> 뒤로가기"); break; }
+			result = AdminController.getInstance().updateCar(dto);
+			if(name.equals("brand")) { name = "브랜드"; }
+			else if(name.equals("model")) { name = "모델"; }
+			else if(name.equals("grade")) { name = "등급"; }
+			if(result) {
+				System.out.printf(">> %s 수정 성공\n", name); 
+			} else {
+				System.out.printf(">> %s 수정 실패\n", name);
+			}
 		}
 	}
 	
 	/** 5. 차량삭제 화면 메소드 */
 	public void deleteCar() {
 		String result = null;
+		Dto dto = new Dto();
 		System.out.println("======== 차량삭제 ========");
 		while(true) {
 			System.out.print(">> 1.브랜드 2.모델 3.등급 4.뒤로가기 : ");			
 			int choose = scan.nextInt();
+			infoPrint(choose, "삭제");
 			if(choose == 1) {
-				System.out.println("======== 브랜드 삭제 ========");
-				System.out.println("브랜드        브랜드         카테고리");
-				System.out.println(" 번호                       번호");
-				System.out.println("-------------------------------");
-				select("brand");
-				System.out.println("-------------------------------");
-				System.out.println("브랜드        브랜드         카테고리");
-				System.out.println(" 번호                       번호");
-				System.out.println("======== 브랜드 삭제 ========");
 				System.out.print(">> 브랜드 번호 : "); int bno = scan.nextInt();
-				Dto dto = new Dto(); dto.setBno(bno); dto.setTname("brand");
-				result = AdminController.getInstance().deleteCar(dto);
-				if(result != null) {
-					System.out.println(">> " + result);
-					continue;
-				} else {
-					System.out.println(">> 삭제 실패");
-					continue;
-				}
+				dto.setBno(bno); dto.setTname("brand");
 			}
 			else if(choose == 2) {
-				System.out.println("======== 모델 삭제 ========");
-				System.out.println(" 모델         모 델         브랜드");
-				System.out.println(" 번호                       번호");
-				System.out.println("-------------------------------");
-				select("model");
-				System.out.println("-------------------------------");
-				System.out.println(" 모델         모 델         브랜드");
-				System.out.println(" 번호                       번호");
-				System.out.println("======== 모델 삭제 ========");
 				System.out.print(">> 모델 번호 : "); int mno = scan.nextInt();
-				Dto dto = new Dto(); dto.setMno(mno); dto.setTname("model");
-				result = AdminController.getInstance().deleteCar(dto);
-				if(result != null) {
-					System.out.println(">> " + result);
-					continue;
-				} else {
-					System.out.println(">> 삭제 실패");
-					continue;
-				}
+				dto.setMno(mno); dto.setTname("model");
 			}
 			else if(choose == 3) {
-				System.out.println("======== 등급 삭제 ========");
-				System.out.println(" 등급          등 급                  가 격\t\t   모델");
-				System.out.println(" 번호                                    \t\t   번호");
-				System.out.println("---------------------------------------------------------------");
-				select("grade");
-				System.out.println("---------------------------------------------------------------");
-				System.out.println(" 등급          등 급                  가 격\t\t   모델");
-				System.out.println(" 번호                                    \t\t   번호");
-				System.out.println("======== 등급 삭제 ========");
 				System.out.print(">> 등급 번호 : "); int gno = scan.nextInt();
-				Dto dto = new Dto(); dto.setGno(gno); dto.setTname("grade");
-				result = AdminController.getInstance().deleteCar(dto);
-				if(result != null) {
-					System.out.println(">> " + result);
-					continue;
-				} else {
-					System.out.println(">> 삭제 실패");
-					continue;
-				}
+				dto.setGno(gno); dto.setTname("grade");
 			}
 			else if(choose == 4) { System.out.println(">> 뒤로가기"); break; }
+			result = AdminController.getInstance().deleteCar(dto);
+			if(result != null) {
+				System.out.println(">> " + result);
+				continue;
+			} else {
+				System.out.println(">> 삭제 실패");
+				continue;
+			}
+		}
+	}
+	
+	/** 테이블 모형 출력 */
+	public void infoPrint(int choose, String state) {
+		if(choose == 0) {
+			System.out.println("======== 카테고리 ========");
+			System.out.println("카테고리\t    카테고리\n 번호");
+			System.out.println("----------------------");
+			select("car");
+			System.out.println("----------------------");
+			System.out.println("카테고리\t    카테고리\n 번호");
+			System.out.println("======== 카테고리 ========");
+		} else if(choose == 1) {
+			System.out.printf("======== 브랜드 %s ========\n", state);
+			System.out.println("브랜드        브랜드         카테고리");
+			System.out.println(" 번호                       번호");
+			System.out.println("-------------------------------");
+			select("brand");
+			System.out.println("-------------------------------");
+			System.out.println("브랜드        브랜드         카테고리");
+			System.out.println(" 번호                       번호");
+			System.out.printf("======== 브랜드 %s ========\n", state);
+		} else if(choose == 2) {
+			System.out.printf("======== 모델 %s ========\n", state);
+			System.out.println(" 모델         모 델         브랜드");
+			System.out.println(" 번호                       번호");
+			System.out.println("-------------------------------");
+			select("model");
+			System.out.println("-------------------------------");
+			System.out.println(" 모델         모 델         브랜드");
+			System.out.println(" 번호                       번호");
+			System.out.printf("======== 모델 %s ========\n", state);
+		} else if(choose == 3) {
+			System.out.printf("======== 등급 %s ========\n", state);
+			System.out.println(" 등급          등 급                  가 격\t\t           모델");
+			System.out.println(" 번호                                    \t\t           번호");
+			System.out.println("---------------------------------------------------------------");
+			select("grade");
+			System.out.println("---------------------------------------------------------------");
+			System.out.println(" 등급          등 급                  가 격\t\t           모델");
+			System.out.println(" 번호                                    \t\t           번호");
+			System.out.printf("======== 등급 %s ========\n", state);
 		}
 	}
 	
