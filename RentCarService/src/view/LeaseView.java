@@ -27,6 +27,11 @@ public class LeaseView {
   // 사용자 입력을 받기 위한 Scanner 객체
   private Scanner scan = new Scanner(System.in);
 
+  // 구분선 출력 메서드
+  private void printDivider() {
+    System.out.println("\n============================================");
+  }
+
   /**
    * 리스 견적 시스템의 메인 실행 메소드
    * 1. 견적 확인하기
@@ -36,10 +41,13 @@ public class LeaseView {
    */
   public void run() {
     while (true) {
-      System.out.println("\n=== 리스 견적 시스템 ===");
+      printDivider();
+      System.out.print("           🚗 리스 견적 시스템 🚗           ");
+      printDivider();
       System.out.println("1. 견적 확인하기");
       System.out.println("2. 계약 신청하기");
       System.out.println("3. 종료");
+      printDivider();
       System.out.print("선택> ");
 
       int choice = scan.nextInt();
@@ -71,55 +79,63 @@ public class LeaseView {
     // 1. 차종 선택 (국산/수입)
     ArrayList<LeaseDto> categories = LeaseController.getInstance().getCategoryList();
 
-    System.out.println("\n=== 차종 선택 ===");
+    printDivider();
+    System.out.print("           🚘 차종 선택           ");
+    printDivider();
 
     for (LeaseDto car : categories) {
       System.out.println(car.getCno() + ". " + car.getCname());
     }
-
+    printDivider();
     System.out.print("차종 선택> ");
     int cno = scan.nextInt();
 
     // 2. 브랜드 선택
     ArrayList<LeaseDto> brands = LeaseController.getInstance().getBrandList(cno);
 
-    System.out.println("\n=== 브랜드 선택 ===");
+    printDivider();
+    System.out.print("           🏢 브랜드 선택           ");
+    printDivider();
 
     for (LeaseDto brand : brands) {
       System.out.println(brand.getBno() + ". " + brand.getBname());
     }
-
+    printDivider();
     System.out.print("브랜드 선택> ");
     int bno = scan.nextInt();
 
     // 3. 모델 선택
     ArrayList<LeaseDto> models = LeaseController.getInstance().getModelList(bno);
 
-    System.out.println("\n=== 모델 선택 ===");
+    printDivider();
+    System.out.print("           🚗 모델 선택           ");
+    printDivider();
     for (LeaseDto model : models) {
       System.out.println(model.getMno() + ". " + model.getMname());
     }
-
+    printDivider();
     System.out.print("모델 선택> ");
     int mno = scan.nextInt();
 
     // 4. 등급 선택
     ArrayList<LeaseDto> grades = LeaseController.getInstance().getGradeList(mno);
 
-    System.out.println("\n=== 등급 선택 ===");
+    printDivider();
+    System.out.print("           ⭐ 등급 선택           ");
+    printDivider();
     for (LeaseDto grade : grades) {
       System.out.printf("%d. %s (%,d원)\n",
           grade.getGno(),
           grade.getGname(),
           grade.getGprice());
     }
-
+    printDivider();
     System.out.print("등급 선택> ");
     int gno = scan.nextInt();
 
     // 5. 견적 계산 실행
     calculateEstimate(gno);
-  } // selectCarProcess end
+  }
 
   /**
    * 견적 계산을 수행하는 메소드
@@ -136,16 +152,18 @@ public class LeaseView {
     LeaseDto grade = LeaseController.getInstance().getGradeInfo(gno);
 
     if (grade == null) {
-      System.out.println("[오류] 선택하신 등급의 정보를 찾을 수 없습니다.");
+      System.out.println("❌ 선택하신 등급의 정보를 찾을 수 없습니다.");
       return;
     }
 
-    System.out.println("\n=== 계약 조건 입력 ===");
+    printDivider();
+    System.out.println("           📋 계약 조건 입력           ");
+    printDivider();
 
     // 계약기간 선택 수정
     int duration = 0;
     while (true) {
-      System.out.println(">>>계약기간 선택");
+      System.out.println(">>> 계약기간 선택");
       System.out.println("1. 36개월");
       System.out.println("2. 48개월");
       System.out.println("3. 60개월");
@@ -163,15 +181,16 @@ public class LeaseView {
           duration = 60;
           break;
         default:
-          System.out.println("잘못된 선택입니다. 1~3 중에서 선택해주세요.");
+          System.out.println("❌ 잘못된 선택입니다. 1~3 중에서 선택해주세요.");
           continue;
       }
       break; // 올바른 선택시 반복문 종료
     }
-    System.out.println(duration + "개월이 선택되었습니다.");
+    System.out.println("✓ " + duration + "개월이 선택되었습니다.");
 
     // 보증금/선납금 선택 구조도 같은 방식으로 수정
-    System.out.println("\n>> 보증금 / 선납금 선택");
+    printDivider();
+    System.out.println(">> 보증금 / 선납금 선택");
     int deposit = 0;
     int prepayment = 0;
 
@@ -201,12 +220,13 @@ public class LeaseView {
               deposit = 50;
               break;
             default:
-              System.out.println("잘못된 선택입니다. 1~3 중에서 선택해주세요.");
+              System.out.println("❌ 잘못된 선택입니다. 1~3 중에서 선택해주세요.");
               continue;
           }
           break;
         }
         prepayment = 0; // 선납금은 0으로 설정
+        System.out.println("✓ 보증금 " + deposit + "% 선택됨 (선납금 선택불가)");
         break;
       } else if (paymentChoice == 2) {
         while (true) {
@@ -228,19 +248,21 @@ public class LeaseView {
               prepayment = 50;
               break;
             default:
-              System.out.println("잘못된 선택입니다. 1~3 중에서 선택해주세요.");
+              System.out.println("❌ 잘못된 선택입니다. 1~3 중에서 선택해주세요.");
               continue;
           }
           break;
         }
         deposit = 0; // 보증금은 0으로 설정
+        System.out.println("✓ 선납금 " + prepayment + "% 선택됨 (보증금 선택불가)");
         break;
       } else {
-        System.out.println("잘못된 선택입니다. 1 또는 2를 선택해주세요.");
+        System.out.println("❌ 잘못된 선택입니다. 1 또는 2를 선택해주세요.");
       }
     }
 
-    System.out.println("\n>> 잔존가치 비율 선택");
+    printDivider();
+    System.out.println(">> 잔존가치 비율 선택");
     System.out.println("1. 30%");
     System.out.println("2. 40%");
     System.out.println("3. 50%");
@@ -261,6 +283,7 @@ public class LeaseView {
       default:
         residualValue = 30;
     }
+    System.out.println("✓ 잔존가치 " + residualValue + "% 선택됨");
 
     try {
       // 견적 계산 및 표시
@@ -270,16 +293,19 @@ public class LeaseView {
       int residualAmount = (int) (basePrice * (residualValue / 100.0));
       int monthlyPayment = (basePrice - depositAmount - prepaymentAmount - residualAmount) / duration;
 
-      System.out.println("\n=== 견적 결과 ===");
-      System.out.println(
-          "차량정보: " + grade.getCname() + " " + grade.getBname() + " " + grade.getMname() + " " + grade.getGname());
+      printDivider();
+      System.out.print("           📊 견적 결과           ");
+      printDivider();
+      System.out.println("차량정보: " + grade.getCname() + " " + grade.getBname() + " " +
+          grade.getMname() + " " + grade.getGname());
       System.out.printf("차량가격: %,d원\n", basePrice);
       System.out.printf("보증금: %,d원 (%d%%)\n", depositAmount, deposit);
       System.out.printf("선납금: %,d원 (%d%%)\n", prepaymentAmount, prepayment);
       System.out.printf("잔존가치: %,d원 (%d%%)\n", residualAmount, residualValue);
       System.out.printf("월 납입금: %,d원\n", monthlyPayment);
+      printDivider();
     } catch (Exception e) {
-      System.out.println("[오류] 견적 계산 중 오류가 발생했습니다: " + e.getMessage());
+      System.out.println("❌ 견적 계산 중 오류가 발생했습니다: " + e.getMessage());
     }
   }
 
@@ -299,32 +325,37 @@ public class LeaseView {
    * - 각 선택 항목에 대한 유효값 검증
    */
   private void applyContract() {
+    printDivider();
+    System.out.println("           📝 계약 신청           ");
+    printDivider();
+
     System.out.print("이름: ");
     String name = scan.nextLine();
 
     String phone;
     while (true) {
-      System.out.println("연락처 (형식: 000-0000-0000): ");
+      System.out.print("연락처 (형식: 000-0000-0000): ");
       phone = scan.nextLine();
       if (phone.matches("\\d{3}-\\d{4}-\\d{4}")) {
         break;
       }
-      System.out.println("[오류] 잘못된 전화번호 형식입니다. 000-0000-0000 형식으로 입력해주세요.");
+      System.out.println("❌ 잘못된 전화번호 형식입니다. 000-0000-0000 형식으로 입력해주세요.");
     }
 
-    System.out.print("계약유형(리스)");
+    System.out.println("계약유형: 리스");
     int type = 2; // 리스는 타입 2로 설정
 
     // 보증금/선납금 선택 구조 수정
-    System.out.println("\n>>보증금 또는 선납금 선택하십시오");
-    System.out.print(">>1.보증금 2.선납금 : ");
+    printDivider();
+    System.out.println(">> 보증금 또는 선납금 선택");
+    System.out.print("1.보증금 2.선납금: ");
     int paymenetChoice = scan.nextInt();
 
     int deposit = 0;
     int prepayment = 0;
 
     if (paymenetChoice == 1) {
-      System.out.print(">>보증금 비율 선택(1:0% 2:30% 3:50%):");
+      System.out.print("보증금 비율 선택(1:0% 2:30% 3:50%): ");
       int depositChoice = scan.nextInt();
       switch (depositChoice) {
         case 1:
@@ -336,11 +367,11 @@ public class LeaseView {
         case 3:
           deposit = 50;
           break;
-      }// switch end
-      System.out.println("보증금" + deposit + "%선택됨(선납금 선택불가)");
+      }
+      System.out.println("✓ 보증금 " + deposit + "% 선택됨 (선납금 선택불가)");
       prepayment = 0; // 선납금 0으로 설정
     } else if (paymenetChoice == 2) {
-      System.out.print(">>선납금 비율 선택(1:0% 2:30% 3:50%):");
+      System.out.print("선납금 비율 선택(1:0% 2:30% 3:50%): ");
       int prepaymentChoice = scan.nextInt();
       switch (prepaymentChoice) {
         case 1:
@@ -353,11 +384,11 @@ public class LeaseView {
           prepayment = 50;
           break;
       }
-      System.out.println("선납금" + prepayment + "% 선택됨(보증금 선택 불가)");
+      System.out.println("✓ 선납금 " + prepayment + "% 선택됨 (보증금 선택불가)");
       deposit = 0; // 보증금 0으로 설정
     }
 
-    System.out.print(">>>잔존가치 비율 선택(1:30% 2:40% 3:50%): ");
+    System.out.print("잔존가치 비율 선택(1:30% 2:40% 3:50%): ");
     int residualChoice = scan.nextInt();
     int residualValue = 0;
 
@@ -373,9 +404,9 @@ public class LeaseView {
         residualValue = 50;
         break;
     }
-    System.out.println("잔존가치 " + residualValue + "% 선택됨");
+    System.out.println("✓ 잔존가치 " + residualValue + "% 선택됨");
 
-    System.out.print(">>>계약기간 선택(1:36개월 2:48개월 3:60개월): ");
+    System.out.print("계약기간 선택(1:36개월 2:48개월 3:60개월): ");
     int durationChoice = scan.nextInt();
     int duration = 0;
 
@@ -391,7 +422,7 @@ public class LeaseView {
         duration = 60;
         break;
     }
-    System.out.println("계약기간 " + duration + "개월 선택됨");
+    System.out.println("✓ 계약기간 " + duration + "개월 선택됨");
 
     LeaseDto dto = new LeaseDto();
     dto.setAname(name);
@@ -399,26 +430,29 @@ public class LeaseView {
     dto.setAtype(type);
     dto.setDeposit(deposit);
     dto.setPrepayments(prepayment);
-    dto.setResidual_value(residualValue); // 선택된 잔존가치 설정
-    dto.setDuration(duration); // 선택된 계약기간 설정
+    dto.setResidual_value(residualValue);
+    dto.setDuration(duration);
 
     boolean result = LeaseController.getInstance().registerApplication(dto);
 
+    printDivider();
     if (result) {
-      System.out.println("계약 신청이 완료되었습니다!");
-
-      System.out.println("\n=== 신청 내용 확인 ===");
-      System.out.println("신청자명:" + dto.getAname());
-      System.out.println("연락처:" + dto.getAphone());
-      System.out.println("계약유형:" + (dto.getAtype() == 1 ? "렌트" : "리스"));
-      System.out.println("보증금:" + dto.getDeposit() + "%");
-      System.out.println("선납금:" + dto.getPrepayments() + "%");
-      System.out.println("잔존가치" + dto.getResidual_value() + "%");
-      System.out.println("계약기간:" + dto.getDuration() + "개월");
+      // printDivider();
+      System.out.println("           📋 신청 내용 확인           ");
+      printDivider();
+      System.out.println("신청자명: " + dto.getAname());
+      System.out.println("연락처: " + dto.getAphone());
+      System.out.println("계약유형: " + (dto.getAtype() == 1 ? "렌트" : "리스"));
+      System.out.println("보증금: " + dto.getDeposit() + "%");
+      System.out.println("선납금: " + dto.getPrepayments() + "%");
+      System.out.println("잔존가치: " + dto.getResidual_value() + "%");
+      System.out.println("계약기간: " + dto.getDuration() + "개월");
+      System.out.println("✅ 계약 신청이 완료되었습니다!");
+      // printDivider();
     } else {
-      System.out.println("계약 신청에 실패했습니다.");
-      System.out.println("다시 시도해주세요");
+      System.out.println("❌ 계약 신청에 실패했습니다.");
+      System.out.println("다시 시도해주세요.");
+      printDivider();
     }
-  } // applyContract end
-
-} // class end
+  }
+}
