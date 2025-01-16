@@ -12,8 +12,8 @@ public class Dao {
 	/** 연동할 DB서버의 계정명 */
 	private String dbuser = "root";
 	/** 연동할 DB서버의 비밀번호 */
-	// private String dbpwd = "1234";
-	private String dbpwd = "2965";
+	private String dbpwd = "1234";
+	//private String dbpwd = "2965";
 
 	protected Dao() {
 		try {
@@ -26,13 +26,6 @@ public class Dao {
 		} catch (SQLException e) {
 			System.out.println(">> DB 연동 실패");
 			System.out.println(e);
-		}
-	}
-
-	// 데이터베이스 연결 확인
-	protected void checkConnection() throws SQLException {
-		if (conn == null || conn.isClosed()) { // 연결이 없거나 닫힌 경우
-			conn = DriverManager.getConnection(dburl, dbuser, dbpwd); // 연결 재시도
 		}
 	}
 }
